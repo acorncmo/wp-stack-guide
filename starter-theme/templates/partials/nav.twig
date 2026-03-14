@@ -1,0 +1,42 @@
+{# partials/nav.twig -- Site navigation #}
+<header class="bg-brand-dark sticky top-0 z-50">
+  <nav class="container mx-auto flex items-center justify-between py-4 px-6">
+
+    {# Logo / site name #}
+    <a href="{{ site_url }}" class="text-white font-display text-xl">
+      {{ site.name }}
+    </a>
+
+    {# Desktop nav #}
+    <div class="hidden lg:flex items-center gap-8">
+      {% for item in nav_primary.items %}
+        <a href="{{ item.link }}"
+           class="text-white text-sm font-sans hover:text-brand-accent transition-colors
+                  {{ item.current ? 'text-brand-accent' : '' }}">
+          {{ item.title }}
+        </a>
+      {% endfor %}
+    </div>
+
+    {# Mobile hamburger #}
+    <button id="mobile-toggle" class="lg:hidden text-white text-2xl" aria-label="Toggle menu">
+      &#9776;
+    </button>
+  </nav>
+
+  {# Mobile menu #}
+  <div id="mobile-menu" class="hidden lg:hidden bg-brand-medium px-6 pb-4">
+    {% for item in nav_primary.items %}
+      <a href="{{ item.link }}"
+         class="block text-white text-sm py-2 border-b border-brand-dark/30">
+        {{ item.title }}
+      </a>
+    {% endfor %}
+  </div>
+</header>
+
+<script>
+document.getElementById('mobile-toggle').addEventListener('click', function() {
+  document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+</script>

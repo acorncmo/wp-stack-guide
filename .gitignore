@@ -1,0 +1,6 @@
+# Working files (project context exports, not part of the public repo)
+_working-files/
+
+# OS
+.DS_Store
+Thumbs.db

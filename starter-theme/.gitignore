@@ -1,0 +1,21 @@
+# Dependencies (installed via npm/composer, not committed)
+node_modules/
+vendor/
+
+# Build artifacts (uncomment if you build on deploy instead of committing)
+# assets/css/app.css
+
+# Environment
+.env
+wp-config-local.php
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Modern WordPress Stack — Timber + Twig + Tailwind | acornCMO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+<style>
+:root {
+  --brown-500: #250F04;
+  --brown-400: #3F1906;
+  --brown-300: #59301B;
+  --brown-200: #735950;
+  --brown-100: #E5C7B8;
+  --blue-500: #25495C;
+  --blue-400: #7090A0;
+  --blue-300: #B8D6E5;
+  --blue-200: #CDE2ED;
+  --blue-100: #E3EFF5;
+  --gold-500: #5C594A;
+  --gold-400: #A09B81;
+  --gold-300: #E5DEB8;
+  --gold-200: #EDE8CD;
+  --gold-100: #F5F2E3;
+  --olive-500: #47470E;
+  --olive-400: #7D7D19;
+  --olive-300: #B2B224;
+  --olive-200: #C9C966;
+  --olive-100: #E0E0A7;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--brown-500);
+  line-height: 1.7;
+  background: #fff;
+}
+
+/* --- LAYOUT --- */
+.site-wrap { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 280px;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--brown-500);
+  color: var(--blue-300);
+  padding: 2rem 1.25rem;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-logo {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--blue-300);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--blue-400);
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.sidebar nav { display: flex; flex-direction: column; gap: 0.15rem; }
+
+.sidebar nav a {
+  color: var(--brown-100);
+  text-decoration: none;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+
+.sidebar nav a:hover, .sidebar nav a.active {
+  color: #fff;
+  background: rgba(184,214,229,0.1);
+}
+
+.sidebar nav a.nav-section {
+  font-weight: 700;
+  color: var(--blue-300);
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-left: 0;
+}
+
+.sidebar nav a.nav-section:first-child { margin-top: 0; }
+
+.main-content {
+  margin-left: 280px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* --- HERO --- */
+.hero {
+  background: var(--brown-500);
+  color: var(--blue-300);
+  padding: 6rem 3rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -40%; right: -10%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,214,229,0.06) 0%, transparent 70%);
+}
+
+.hero-eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--olive-300);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.1;
+  color: #fff;
+  max-width: 700px;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 600px;
+  color: var(--blue-200);
+}
+
+/* --- SECTIONS --- */
+.section {
+  padding: 4rem 3rem;
+  max-width: 900px;
+}
+
+.section-wide {
+  max-width: 100%;
+}
+
+.section-blue { background: var(--blue-100); }
+.section-gold { background: var(--gold-100); }
+.section-cream { background: var(--gold-200); }
+.section-light-blue { background: var(--blue-200); }
+
+.section h2 {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+  color: var(--brown-500);
+}
+
+.section h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--brown-400);
+}
+
+.section h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--brown-300);
+}
+
+.section p {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.section ul, .section ol {
+  margin: 0 0 1.25rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.section li { margin-bottom: 0.4rem; }
+
+/* --- CODE BLOCKS --- */
+pre[class*="language-"] {
+  border-radius: 8px;
+  margin: 1.25rem 0 1.5rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+code:not([class*="language-"]) {
+  background: var(--gold-100);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--brown-400);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* --- CALLOUT BOXES --- */
+.callout {
+  border-left: 4px solid;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+.callout-tip {
+  border-color: var(--blue-400);
+  background: var(--blue-100);
+}
+.callout-tip .callout-title { color: var(--blue-500); }
+
+.callout-warning {
+  border-color: var(--olive-300);
+  background: rgba(178,178,36,0.08);
+}
+.callout-warning .callout-title { color: var(--olive-500); }
+
+.callout-lesson {
+  border-color: var(--gold-400);
+  background: var(--gold-100);
+}
+.callout-lesson .callout-title { color: var(--gold-500); }
+
+.callout-placeholder {
+  border-color: var(--brown-200);
+  background: rgba(115,89,80,0.06);
+  font-style: italic;
+}
+.callout-placeholder .callout-title { color: var(--brown-200); }
+
+/* --- TABLES --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.88rem;
+}
+
+thead th {
+  background: var(--brown-500);
+  color: var(--blue-300);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+tbody td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--gold-200);
+  vertical-align: top;
+}
+
+tbody tr:hover { background: var(--gold-100); }
+
+/* --- COMPARISON CARDS --- */
+.host-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.host-card {
+  border: 2px solid var(--gold-200);
+  border-radius: 12px;
+  padding: 2rem;
+  background: #fff;
+}
+
+.host-card h4 {
+  margin-top: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--brown-500);
+}
+
+.host-card .price {
+  font-size: 0.85rem;
+  color: var(--olive-500);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.host-card .pros, .host-card .cons {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.host-card .pros span { color: var(--olive-400); font-weight: 700; }
+.host-card .cons span { color: var(--brown-300); font-weight: 700; }
+
+/* --- FILE TREE --- */
+.file-tree {
+  background: var(--brown-500);
+  color: var(--blue-200);
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.file-tree .comment { color: var(--blue-400); }
+
+/* --- STEP INDICATORS --- */
+.step {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  align-items: flex-start;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  background: var(--brown-500);
+  color: var(--blue-300);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.step-content { flex: 1; }
+.step-content p { margin-bottom: 0.5rem; }
+
+/* --- SECTION DIVIDER --- */
+.divider {
+  height: 4px;
+  background: linear-gradient(90deg, var(--brown-500) 0%, var(--olive-300) 50%, var(--blue-300) 100%);
+}
+
+/* --- MOBILE NAV --- */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem; left: 1rem;
+  z-index: 200;
+  background: var(--brown-500);
+  color: var(--blue-300);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .mobile-toggle { display: block; }
+  .main-content { margin-left: 0; }
+  .hero { padding: 5rem 1.5rem 3rem; }
+  .section { padding: 3rem 1.5rem; }
+  .hero h1 { font-size: 2rem; }
+}
+
+/* --- PRINT --- */
+@media print {
+  .sidebar, .mobile-toggle { display: none; }
+  .main-content { margin-left: 0; }
+  .hero { padding: 2rem; }
+  .section { padding: 1.5rem 0; }
+}
+
+/* --- BACK-TO-TOP --- */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 40px; height: 40px;
+  background: var(--brown-500);
+  color: var(--blue-300);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 50;
+}
+.back-to-top.visible { opacity: 1; }
+
+/* --- COLLAPSIBLE SECTIONS --- */
+details.collapsible {
+  border: 1px solid var(--gold-200);
+  border-radius: 8px;
+  margin: 2rem 0;
+  background: #fff;
+}
+
+details.collapsible[open] {
+  border-color: var(--blue-300);
+}
+
+details.collapsible summary {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--brown-400);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+details.collapsible summary:hover {
+  color: var(--brown-500);
+}
+
+details.collapsible summary::before {
+  content: '▸';
+  font-size: 0.85em;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+details.collapsible[open] summary::before {
+  transform: rotate(90deg);
+}
+
+details.collapsible summary::-webkit-details-marker { display: none; }
+
+details.collapsible .collapsible-body {
+  padding: 0 1.25rem 1.25rem;
+}
+
+/* --- SUBSECTION DIVIDER (lighter than main divider) --- */
+.sub-divider {
+  height: 1px;
+  background: var(--gold-200);
+  margin: 3rem 0;
+}
+
+/* --- CODE BLOCK LABELS --- */
+.code-label {
+  display: inline-block;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue-400);
+  background: var(--brown-500);
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: -0.35rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- PROGRESS BAR (reading position) --- */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 280px;
+  height: 3px;
+  background: var(--olive-300);
+  z-index: 150;
+  transition: width 0.1s;
+  width: 0%;
+}
+
+@media (max-width: 900px) {
+  .reading-progress { left: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="reading-progress"></div>
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle navigation">&#9776;</button>
+
+<div class="site-wrap">
+
+<!-- ============ SIDEBAR NAV ============ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">acornCMO</div>
+  <div class="sidebar-subtitle">WordPress Guide</div>
+  <nav>
+    <a href="#intro" class="nav-section">Introduction</a>
+    <a href="#who">Who This Is For</a>
+    <a href="#what-youll-build">What You'll Build</a>
+    <a href="#quick-start">Quick Start (3 Steps)</a>
+
+    <a href="#architecture" class="nav-section">Architecture Overview</a>
+    <a href="#architecture-diagram">System Diagram</a>
+
+    <a href="#strategic" class="nav-section">The Strategic Picture</a>
+    <a href="#landscape">WordPress in 2026</a>
+    <a href="#headless">Headless CMS: Pros &amp; Cons</a>
+    <a href="#page-builders">Page Builders: The Trap</a>
+    <a href="#ttt-stack">The Timber + Twig + Tailwind Stack</a>
+    <a href="#claude-code-intro">Where Claude Code Fits</a>
+
+    <a href="#hosting" class="nav-section">Choosing Your Host</a>
+    <a href="#host-criteria">What to Look For</a>
+    <a href="#siteground">SiteGround</a>
+    <a href="#wpengine">WP Engine</a>
+    <a href="#cloudways">Cloudways</a>
+    <a href="#host-comparison">Comparison Table</a>
+
+    <a href="#local-dev" class="nav-section">Local Development</a>
+    <a href="#why-local">Why Local Matters</a>
+    <a href="#install-localwp">Installing LocalWP</a>
+    <a href="#localwp-features">Key Features</a>
+    <a href="#other-local">Other Options</a>
+    <a href="#wp-cli">WP-CLI</a>
+
+    <a href="#github" class="nav-section">GitHub Setup</a>
+    <a href="#why-git">Why Version Control</a>
+    <a href="#github-setup">Setting Up GitHub</a>
+    <a href="#repo-strategy">Repository Strategy</a>
+    <a href="#gitignore">The .gitignore File</a>
+    <a href="#daily-git">Daily Workflow</a>
+
+    <a href="#theme-foundation" class="nav-section">Theme: Foundation</a>
+    <a href="#directory-structure">Directory Structure</a>
+    <a href="#install-timber">Installing Timber</a>
+    <a href="#tailwind-setup">Tailwind CSS Setup</a>
+    <a href="#tailwind-config">Design Tokens</a>
+    <a href="#functions-php">functions.php</a>
+    <a href="#timber-mental-model">How Timber Works</a>
+
+    <a href="#theme-templates" class="nav-section">Theme: Templates</a>
+    <a href="#base-twig">base.twig</a>
+    <a href="#nav-partial">Navigation</a>
+    <a href="#footer-partial">Footer</a>
+    <a href="#page-templates">Page Templates</a>
+
+    <a href="#custom-fields" class="nav-section">Custom Fields &amp; Blocks</a>
+    <a href="#when-custom-fields">When You Need Them</a>
+    <a href="#lazy-blocks">Lazy Blocks</a>
+    <a href="#acf-pro">ACF Pro</a>
+    <a href="#block-render">The Shared Render Pipeline</a>
+
+    <a href="#migration" class="nav-section">Migration</a>
+    <a href="#migration-mindset">The Mindset</a>
+    <a href="#from-elementor">From Elementor</a>
+    <a href="#from-sanity">From a Headless CMS</a>
+    <a href="#db-migration">Database Migration</a>
+
+    <a href="#deployment" class="nav-section">Deployment</a>
+    <a href="#deploy-concepts">Core Concepts</a>
+    <a href="#deploy-siteground">To SiteGround</a>
+    <a href="#deploy-wpengine">To WP Engine</a>
+    <a href="#deploy-cloudways">To Cloudways</a>
+
+    <a href="#claude-code" class="nav-section">Claude Code Workflow</a>
+    <a href="#context-pattern">The Context File Pattern</a>
+    <a href="#prompting">Effective Prompting</a>
+    <a href="#session-workflow">Session Workflow</a>
+
+    <a href="#appendices" class="nav-section">Appendices</a>
+    <a href="#appendix-gitignore">.gitignore Template</a>
+    <a href="#appendix-prelaunch">Pre-Launch Checklist</a>
+    <a href="#appendix-troubleshooting">Troubleshooting</a>
+  </nav>
+</aside>
+
+<!-- ============ MAIN CONTENT ============ -->
+<div class="main-content">
+
+<!-- HERO -->
+<header class="hero" id="intro">
+  <div class="hero-eyebrow">An acornCMO Field Guide</div>
+  <h1>The Modern WordPress Stack for Marketers and Founders</h1>
+  <p>A comprehensive, hands-on guide to building fast, maintainable WordPress sites with Timber, Twig, and Tailwind CSS. No developer required. Built from three real migrations, managed entirely with Claude Code.</p>
+</header>
+
+<div class="divider"></div>
+
+<!-- ============================== -->
+<!-- SECTION 0: INTRODUCTION        -->
+<!-- ============================== -->
+<section class="section" id="who">
+  <h2>Who This Guide Is For</h2>
+  <p>This guide is for technically minded marketers at small and medium companies, and technically minded founders at early-stage startups. You are comfortable in a terminal. You have opinions about your website. And you are tired of being dependent on developers or page builder plugins to make changes to your own site.</p>
+  <p>You do not need to be a developer to follow this guide. You need to be willing to open a code editor, run a few terminal commands, and learn a templating language that reads like English. If you can write a marketing email, you can write a Twig template.</p>
+  <p>That said, if you <em>are</em> a developer, everything here will still apply. The architecture is clean, the tooling is standard, and the patterns scale. You will just move faster through the setup sections.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">What you'll need</div>
+    <p>A computer (Mac or Windows), a web browser, a willingness to use the terminal, and a Claude Code subscription. We will walk you through installing everything else.</p>
+  </div>
+</section>
+
+<section class="section section-gold" id="what-youll-build">
+  <h2>What You'll Build</h2>
+  <p>By the end of this guide, you will have a complete WordPress site running a custom theme built on Timber (PHP/Twig bridge), Twig (clean templating), and Tailwind CSS (utility-first styling). Your site will be:</p>
+  <ul>
+    <li><strong>Fast.</strong> No page builder bloat. Tailwind compiles to a tiny CSS file. Timber renders server-side with no JavaScript overhead.</li>
+    <li><strong>Maintainable.</strong> Twig templates read like HTML with variables. You can make changes confidently, even months later, because the code is self-documenting.</li>
+    <li><strong>Portable.</strong> Your theme lives in a GitHub repository. Deploy to SiteGround, WP Engine, or Cloudways with a single push. Switch hosts without rebuilding anything.</li>
+    <li><strong>AI-friendly.</strong> Claude Code can read, write, and debug Twig + Tailwind fluently. Your AI co-pilot understands every file in the project.</li>
+  </ul>
+  <p>The guide covers the full lifecycle: choosing a host, setting up local development, building the theme from scratch, handling custom fields and content blocks, migrating from Elementor or a headless CMS, deploying to production, and maintaining the site long-term with Claude Code as your co-pilot.</p>
+</section>
+
+<!-- ============================== -->
+<!-- QUICK START                     -->
+<!-- ============================== -->
+<section class="section" id="quick-start" style="background: var(--brown-500); color: var(--blue-200);">
+  <h2 style="color: #fff;">Ready to build? Start here.</h2>
+  <p>If you want to understand the full picture, keep reading. If you want to start building right now, here is what to do. The <a href="https://github.com/acorncmo/wp-stack-guide" style="color: var(--olive-300);">GitHub repo</a> contains a working starter theme, two companion files optimized for Claude Code, and this guide.</p>
+
+  <div class="step">
+    <div class="step-num" style="background: var(--olive-300); color: var(--brown-500);">1</div>
+    <div class="step-content">
+      <p><strong style="color: #fff;">Clone the repo and copy the starter theme into your LocalWP site.</strong></p>
+      <pre><code class="language-bash">git clone https://github.com/acorncmo/wp-stack-guide.git
+cp -r wp-stack-guide/starter-theme/ \
+  ~/Local\ Sites/your-site/app/public/wp-content/themes/your-theme/</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num" style="background: var(--olive-300); color: var(--brown-500);">2</div>
+    <div class="step-content">
+      <p><strong style="color: #fff;">Open <code style="background: var(--brown-300); color: var(--blue-200);">CLAUDE.md</code> in the theme directory and customize it.</strong> Replace every bracketed placeholder with your project's details: site name, brand colors, page list, hosting choice. This is the file that makes Claude Code effective across sessions. A generic one is barely useful. A customized one turns Claude Code from assistant to co-pilot.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num" style="background: var(--olive-300); color: var(--brown-500);">3</div>
+    <div class="step-content">
+      <p><strong style="color: #fff;">Start a Claude Code session in your theme directory.</strong></p>
+      <pre><code class="language-bash">cd ~/Local\ Sites/your-site/app/public/wp-content/themes/your-theme/
+claude</code></pre>
+      <p>Then tell it: <em>"Read CLAUDE.md and theme-scaffold.md. I want to set up this theme for [my site]. Walk me through the setup."</em></p>
+      <p>Claude Code will install Composer dependencies, compile Tailwind, and walk you through activating the theme. From there, you build.</p>
+    </div>
+  </div>
+
+  <p style="margin-top: 2rem; font-size: 0.85rem; color: var(--blue-400);">After initial setup, every subsequent session starts with: <em>"Read CLAUDE.md. Here is what I want to work on today."</em> The full guide below explains every decision behind this starter kit.</p>
+</section>
+
+<!-- ============================== -->
+<!-- ARCHITECTURE DIAGRAM           -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section section-wide" id="architecture" style="max-width: 100%;">
+  <div style="max-width: 900px; margin: 0 auto;">
+    <h2 id="architecture-diagram">How It All Fits Together</h2>
+    <p>Before diving into the details, here is the big picture. Three environments, connected by Git and WP-CLI. Your theme is the only thing that flows through version control. The database and media library are managed separately on each environment.</p>
+  </div>
+  <div style="max-width: 1100px; margin: 1.5rem auto 0;">
+    <img src="architecture-diagram.svg" alt="WordPress development architecture diagram showing local environment, GitHub, and production host with arrows indicating deployment flow" style="width: 100%; height: auto;">
+  </div>
+  <div style="max-width: 900px; margin: 1.5rem auto 0;">
+    <p>The key insight: <strong>your theme is the only custom code</strong>. WordPress core and plugins are installed and updated through the WordPress admin on each environment independently. The database contains your content and settings, and migrates via WP-CLI export/import with URL search-replace. Your media library (uploads) either migrates via SFTP or is managed directly on the production server. The theme, the thing you build, is a small, version-controlled directory that deploys cleanly to any WordPress host.</p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 1: STRATEGIC PICTURE   -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="strategic">
+  <h2 id="landscape">The WordPress Landscape in 2026</h2>
+  <p>WordPress powers roughly 43% of the web. That number has not changed much in five years, which tells you something important: for all the noise about headless CMS platforms, Jamstack, and AI-generated sites, WordPress remains the pragmatic choice for most businesses. The plugin ecosystem is unmatched. The hosting options are abundant and affordable. Content editors already know how to use it.</p>
+  <p>But WordPress has two failure modes that catch most small teams:</p>
+  <p><strong>Failure mode one: page builder sprawl.</strong> You install Elementor or Divi because you want to build pages visually, without writing code. It works at first. Then the site gets slow. The markup is bloated with nested divs and inline styles. Every "simple" change requires navigating a drag-and-drop interface that has become more complex than code would have been. You are locked into the builder's ecosystem, and your site's performance suffers with every plugin update.</p>
+  <p><strong>Failure mode two: developer dependency.</strong> You hire a developer (or agency) to build a custom theme. The code is clean, the site is fast. Then the developer moves on. You need to change a headline, add a section, update a page. You cannot do it yourself because the theme was built with raw PHP that you cannot read, and the developer's patterns are undocumented. You are back to hiring someone for every small change.</p>
+  <p>The Timber + Twig + Tailwind stack solves both of these problems. Your templates are readable. Your CSS is utility-based and self-documenting. And Claude Code can work with every file in the project, which means you always have a co-pilot who understands the codebase.</p>
+</section>
+
+<section class="section section-blue" id="headless">
+  <details class="collapsible" open>
+    <summary>Headless CMS: The Appeal and the Reality</summary>
+    <div class="collapsible-body">
+  <p>If you have spent any time researching modern web architecture, you have heard the case for headless CMS platforms like Sanity, Contentful, or Strapi. The pitch is compelling: your content lives in a clean, structured API. Your frontend is a separate application built with React, Next.js, or whatever framework you prefer. The content model is beautiful. The developer experience is excellent.</p>
+  <p>We have been inside that world. We migrated a real client site from Sanity CMS back to WordPress, and we have strong opinions about when headless makes sense and when it is expensive overkill.</p>
+  <p><strong>What headless gets right:</strong> The content model is genuinely better. Structured data, typed fields, portable content. If you are building a product with content that needs to appear across multiple platforms (web, mobile app, kiosk, API), headless is the right call.</p>
+  <p><strong>What headless costs you:</strong> Two codebases instead of one. A frontend framework that requires a developer to maintain. Hosting complexity (you need both a CMS host and a frontend host). Loss of the entire WordPress plugin ecosystem. No visual content editing without building a custom preview system. And the biggest hidden cost: when something breaks at 10pm, you need a developer who understands both the CMS and the frontend framework to fix it.</p>
+  <p>For a marketing site, a brochure site, or a content-driven site at a small company, headless is almost always more architecture than the problem requires. You are solving a content delivery problem that you do not have, and paying for it in complexity.</p>
+  <p>When we migrated a client site from Sanity + Next.js to WordPress on Cloudways, the biggest surprise was not the content migration itself (though that was involved: a 7-step Node.js pipeline with GROQ exports, PortableText-to-HTML conversion, and a two-pass reference resolver). It was how much simpler everything became afterward. One codebase. One hosting account. One deployment target. The team could make content changes without waiting for a developer to deploy the frontend. The structured content model we lost from Sanity was replaced by ACF Pro Flexible Content fields that gave the content team a page builder experience inside the WordPress editor, with 25+ reusable modules, each backed by a Twig template.</p>
+    </div>
+  </details>
+</section>
+
+<section class="section" id="page-builders">
+  <details class="collapsible" open>
+    <summary>Page Builders: The Trap and the Exit</summary>
+    <div class="collapsible-body">
+  <p>Elementor, Divi, and WPBakery all promise the same thing: build beautiful pages without writing code. And they deliver on that promise, for about six months. Then the costs start compounding.</p>
+  <p>We have migrated two production sites from Elementor to custom Timber themes. Here is what we found:</p>
+  <p><strong>Markup bloat.</strong> A simple hero section in Elementor generates 15+ nested <code>&lt;div&gt;</code> elements with inline styles. The same section in Twig is 8 lines of clean HTML with Tailwind classes. This is not an aesthetic preference. It directly affects page load time, Core Web Vitals scores, and SEO.</p>
+  <p><strong>CSS conflicts.</strong> Elementor ships its own CSS framework that competes with your theme styles, any custom CSS you add, and other plugins. Debugging a visual inconsistency means tracing through multiple layers of specificity. In a Tailwind theme, what you see in the class list is what renders. There is one source of truth.</p>
+  <p><strong>Content lock-in.</strong> This is the real trap. Elementor stores your page content as a JSON blob in the <code>_elementor_data</code> postmeta field. Your actual content, the words you wrote, are wrapped in a proprietary data structure. If you deactivate Elementor, your pages display raw shortcodes or nothing at all. There is no "export to HTML" button that preserves your layout.</p>
+  <p><strong>The exit path is manual.</strong> In both Elementor migrations we have done, the content had to be recreated by hand. We inspected each Elementor page, extracted the text and images, and rebuilt every section as a Twig template with Tailwind classes. No automated converter worked reliably. This is the price of the page builder promise: when you leave, you start over.</p>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Before you start an Elementor migration</div>
+    <p>Do not deactivate Elementor before you have rebuilt every page. Keep the old theme active while you build the new one in a local development environment. Use the live Elementor site as your visual reference and content source. Only switch themes after every page has been recreated and visually QA'd against the original.</p>
+  </div>
+    </div>
+  </details>
+</section>
+
+<section class="section section-cream" id="ttt-stack">
+  <h3>Timber + Twig + Tailwind: The Best of Both Worlds</h3>
+  <p>Here is what this stack gives you, and why it is the right answer for small teams who want professional results without developer dependency:</p>
+  <p><strong>Timber</strong> is a PHP library that adds a proper separation of concerns to WordPress. Instead of writing PHP spaghetti in your template files (mixing HTML, database queries, and logic in the same file), Timber lets you prepare your data in PHP and render it in Twig. Your PHP files become 3-line dispatchers. Your Twig files become clean, readable templates.</p>
+  <p><strong>Twig</strong> is the templating language Timber uses. If you can read HTML, you can read Twig. Variables look like <code>{{ post.title }}</code>. Loops look like <code>{% for post in posts %}</code>. Conditionals look like <code>{% if post.thumbnail %}</code>. There is no PHP syntax to learn. The templates are logic-light by design, which means they stay readable even as the site grows.</p>
+  <p><strong>Tailwind CSS</strong> is a utility-first CSS framework. Instead of writing custom CSS classes and maintaining a separate stylesheet, you apply styles directly in your HTML with utility classes like <code>bg-brown-500 text-white py-12 px-6</code>. This sounds messy until you try it. In practice, it means every element's styling is visible right where the element is defined. No hunting through stylesheets. No specificity wars. And in production, Tailwind compiles to a tiny CSS file that includes only the classes you actually used.</p>
+  <p><strong>The combination</strong> gives you WordPress's content editing and plugin ecosystem, with code that is clean enough for Claude Code to read, write, and maintain. That last point matters more than anything else in this stack. A technically minded marketer with Claude Code can build, modify, and maintain a Timber/Twig/Tailwind site at a level that previously required a frontend developer.</p>
+</section>
+
+<section class="section" id="claude-code-intro">
+  <h3>Where Claude Code Fits</h3>
+  <p>Claude Code is a terminal-based AI coding assistant from Anthropic. It runs in your terminal, reads your project files, and can write, modify, and debug code with full awareness of your codebase. It is not a chatbot that generates code snippets. It is an agent that understands your file structure, your dependencies, and your patterns.</p>
+  <p>This stack is particularly well-suited to Claude Code for three reasons:</p>
+  <p><strong>Twig is highly structured.</strong> Templates follow predictable patterns. Claude Code can scaffold a new page template by following the conventions already established in your existing templates. Once you have <code>base.twig</code>, a nav partial, and one page template, Claude Code can build the rest.</p>
+  <p><strong>Tailwind is self-documenting.</strong> Because styles are expressed as utility classes right in the HTML, Claude Code can see exactly what something looks like by reading the template. It does not need to cross-reference a separate CSS file. And it can apply styles by describing what it wants: "a full-width section with a dark brown background, white text, and generous vertical padding" translates directly to Tailwind classes.</p>
+  <p><strong>The context file pattern works.</strong> We maintain a <code>context.md</code> file in every project that tells Claude Code what the project is, what tech stack it uses, where files live, and what the current status is. This means every session starts with full project awareness, even if weeks have passed since the last session. Section 12 covers this workflow in detail.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">What Claude Code can and cannot do</div>
+    <p><strong>Can:</strong> Scaffold templates, write Tailwind classes, configure Timber, set up build tools, debug Twig errors, explain what code does, help with Git workflows, write deployment scripts.</p>
+    <p><strong>Cannot:</strong> Make design decisions for you, replace visual QA (you still need to look at the site in a browser), manage your hosting dashboard, or automatically deploy without your review.</p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 2: HOSTING             -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="hosting">
+  <h2 id="host-criteria">Choosing Your WordPress Host</h2>
+  <p>Your hosting choice affects deployment workflow, performance, cost, and how much technical overhead you carry. For a Timber + Twig + Tailwind site, here is what matters:</p>
+  <ul>
+    <li><strong>PHP 8.1+</strong> — Timber 2.x requires PHP 8.0 at minimum. Run 8.1 or 8.2 for best performance.</li>
+    <li><strong>SSH access</strong> — Required for WP-CLI commands and deployment scripts. Non-negotiable.</li>
+    <li><strong>Staging environments</strong> — You should never deploy directly to production without testing. A one-click staging environment saves hours.</li>
+    <li><strong>Git integration</strong> — Nice to have. WP Engine offers native Git push-to-deploy. Others require manual or scripted deployment.</li>
+    <li><strong>Caching layer</strong> — Every host handles caching differently. Your Timber templates render server-side on every request unless cached. The host's caching layer determines how much that matters for performance.</li>
+    <li><strong>Price-to-value at your scale</strong> — A brochure site for a 20-person company does not need enterprise hosting. But it does need reliability and good support.</li>
+  </ul>
+</section>
+
+<section class="section section-wide section-gold" id="host-cards-section">
+  <div style="max-width: 960px; margin: 0 auto;">
+  <div class="host-cards">
+    <div class="host-card" id="siteground">
+      <h4>SiteGround</h4>
+      <div class="price">Starting at ~$15/mo (GrowBig plan recommended)</div>
+      <p>Managed shared and cloud hosting with strong WordPress integration. SiteGround is the most accessible option for small teams deploying their first custom theme. The Site Tools dashboard is clean and well-designed, and the SG Optimizer plugin handles caching, image optimization, and performance tuning in one place.</p>
+      <div class="pros"><span>&#10003; Strengths:</span> Affordable entry point. SG Optimizer caching is effective and easy to configure. Free SSL via Let's Encrypt, activated with one click. Good dashboard UX. Solid support with WordPress-specific knowledge. Daily backups included.</div>
+      <div class="cons"><span>&#10007; Weaknesses:</span> Staging is only available on GrowBig plan and above. SSH access has some quirks (custom port, key-based auth required). No native Git integration. Performance ceiling on shared hosting for high-traffic sites. Renewal pricing jumps significantly after the first term.</div>
+      <p style="margin-top: 0.75rem; font-size: 0.85rem;"><strong>Best for:</strong> First deployments, low-to-medium traffic brochure sites, budget-conscious teams who want reliable managed hosting without enterprise pricing.</p>
+      <p style="font-size: 0.85rem;"><strong>Deploy method:</strong> SFTP upload or SSH deploy script. No native Git push.</p>
+    </div>
+
+    <div class="host-card" id="wpengine">
+      <h4>WP Engine</h4>
+      <div class="price">Starting at ~$20/mo (Startup plan)</div>
+      <p>Premium managed WordPress hosting built for professional sites. WP Engine is the choice when you want deployment via Git, rock-solid staging, and enterprise-grade caching (EverCache) out of the box. The higher price buys you a significantly better deployment workflow and peace of mind.</p>
+      <div class="pros"><span>&#10003; Strengths:</span> Native Git push-to-deploy (push to a remote, site updates automatically). EverCache delivers excellent performance without configuration. One-click staging and production environments. LocalWP has built-in Connect for push/pull. Excellent support. Automated backups and restore points.</div>
+      <div class="cons"><span>&#10007; Weaknesses:</span> More expensive than SiteGround or Cloudways at every tier. Some plugins are restricted (their own caching plugins, certain security plugins). <code>wp-config.php</code> is partially managed by WP Engine, so some configuration requires their dashboard. No email hosting included. The file system is read-only in some directories.</div>
+      <p style="margin-top: 0.75rem; font-size: 0.85rem;"><strong>Best for:</strong> Client sites, teams who want Git-based deployment, anyone who values "it just works" caching and staging. Worth the premium if deployment workflow matters to you.</p>
+      <p style="font-size: 0.85rem;"><strong>Deploy method:</strong> Git push to WP Engine remote. Also supports SFTP and LocalWP Connect push.</p>
+    </div>
+
+    <div class="host-card" id="cloudways">
+      <h4>Cloudways</h4>
+      <div class="price">Starting at ~$14/mo (DigitalOcean 1GB)</div>
+      <p>Managed cloud hosting that sits on top of infrastructure providers like DigitalOcean, AWS, or Vultr. Cloudways gives you more control over your server than SiteGround or WP Engine, with a dashboard that abstracts away the hard parts of server management. It is the choice for teams that want cloud-grade performance without managing a VPS directly.</p>
+      <div class="pros"><span>&#10003; Strengths:</span> Flexible server sizing (scale up without migrating). Varnish + Nginx caching stack delivers strong performance. Good value for traffic volume. One-click staging clone. GitHub integration in dashboard. SSH and SFTP access. Choose your infrastructure provider and server region.</div>
+      <div class="cons"><span>&#10007; Weaknesses:</span> More technical than SiteGround. The dashboard has a learning curve. Pricing can creep up as you add features or scale. No built-in email hosting (use Mailgun, SendGrid, or similar). Less WordPress-specific hand-holding than WP Engine.</div>
+      <p style="margin-top: 0.75rem; font-size: 0.85rem;"><strong>Best for:</strong> Performance-focused teams, sites with growing traffic, anyone who wants cloud infrastructure without managing it directly. Good middle ground between SiteGround's simplicity and running your own server.</p>
+      <p style="font-size: 0.85rem;"><strong>Deploy method:</strong> SFTP, SSH script, or GitHub integration via Cloudways dashboard.</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="section" id="host-comparison">
+  <h3>Side-by-Side Comparison</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>SiteGround</th>
+        <th>WP Engine</th>
+        <th>Cloudways</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Starting price</td><td>~$15/mo</td><td>~$20/mo</td><td>~$14/mo</td></tr>
+      <tr><td>Staging environment</td><td>GrowBig+ plans</td><td>All plans</td><td>All plans (clone)</td></tr>
+      <tr><td>Native Git deploy</td><td>No</td><td>Yes (push-to-deploy)</td><td>GitHub integration</td></tr>
+      <tr><td>SSH access</td><td>Yes (key-based, custom port)</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Caching</td><td>SG Optimizer</td><td>EverCache</td><td>Varnish + Breeze</td></tr>
+      <tr><td>PHP 8.1+ support</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Free SSL</td><td>Yes (Let's Encrypt)</td><td>Yes</td><td>Yes (Let's Encrypt)</td></tr>
+      <tr><td>Email hosting</td><td>Included</td><td>Not included</td><td>Not included</td></tr>
+      <tr><td>LocalWP Connect</td><td>No</td><td>Yes (push/pull)</td><td>No</td></tr>
+      <tr><td>Best for this stack</td><td>Budget-first, simple deploys</td><td>Git workflow, client sites</td><td>Performance, flexibility</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 3: LOCAL DEVELOPMENT   -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="local-dev">
+  <h2 id="why-local">Setting Up Your Local Development Environment</h2>
+  <p>Local development means running WordPress on your own computer. You build, test, and break things locally, where mistakes cost nothing. Then you deploy to your live site only when everything works.</p>
+  <p>This is not optional. Building directly on a live site is how pages go blank at 3pm on a Tuesday. Every professional WordPress workflow starts local.</p>
+
+  <h3 id="install-localwp">Installing LocalWP</h3>
+  <p>LocalWP (formerly Local by Flywheel) is the easiest way to run WordPress on your machine. It handles PHP, MySQL, Nginx, and SSL automatically. You do not need to install any of those separately.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <p><strong>Download LocalWP</strong> from <a href="https://localwp.com">localwp.com</a>. Choose the Mac or Windows installer. Run it. Accept the defaults during installation.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <p><strong>Create a new site.</strong> Click the <strong>+</strong> button in the bottom-left corner. Give your site a name (this becomes the local URL, e.g., <code>my-site.local</code>). Choose "Preferred" for the environment settings, which gives you a current PHP version and MySQL. Set your WordPress admin username and password.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <p><strong>Start the site.</strong> LocalWP will download WordPress, configure the database, and spin up a local server. This takes about 60 seconds. When it is done, you will see your site listed in the LocalWP dashboard with a green "Running" indicator.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <p><strong>Know where your files live.</strong> This is important for everything that follows. LocalWP stores sites in a predictable directory:</p>
+      <ul>
+        <li><strong>Mac:</strong> <code>~/Local Sites/your-site-name/app/public/</code></li>
+        <li><strong>Windows:</strong> <code>C:\Users\you\Local Sites\your-site-name\app\public\</code></li>
+      </ul>
+      <p>Your theme will live at: <code>.../app/public/wp-content/themes/your-theme/</code></p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <p><strong>Open the WP admin.</strong> Click "WP Admin" in LocalWP to open your site's admin dashboard. Bookmark this. You will use it constantly.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">PHP version matters</div>
+    <p>Timber 2.x requires PHP 8.0+. When creating your LocalWP site, make sure the PHP version is 8.1 or higher. You can check this in LocalWP under the site's settings. If your host runs a different PHP version, match it locally to avoid surprises during deployment.</p>
+  </div>
+
+  <h3 id="localwp-features">Key LocalWP Features for This Workflow</h3>
+  <p><strong>One-click admin login.</strong> Click the "WP Admin" button and you are logged in. No typing passwords during development.</p>
+  <p><strong>Live Link.</strong> Share your local site with a temporary public URL. Useful for showing work to a client or teammate without deploying. Click "Enable" under Live Link in the LocalWP dashboard.</p>
+  <p><strong>SSL.</strong> LocalWP can generate a trusted SSL certificate for your local site. Click "Trust" under SSL in the site settings. This prevents mixed-content warnings when developing with HTTPS.</p>
+  <p><strong>Mailhog.</strong> LocalWP intercepts outgoing emails from your local WordPress and shows them in a built-in mail client. Essential for testing contact forms without actually sending emails.</p>
+  <p><strong>Connect to WP Engine.</strong> If you use WP Engine, LocalWP has a built-in integration that lets you push and pull your database and files between local and your WP Engine environment. This is the fastest path to deployment if you are on WP Engine.</p>
+
+  <h3 id="other-local">Other Local Development Options</h3>
+  <p>LocalWP is the recommendation for this guide because it requires zero configuration and handles the most common WordPress development needs out of the box. But there are alternatives:</p>
+  <p><strong>DDEV</strong> is a Docker-based local development tool. It is more configurable than LocalWP and better suited for teams that need to match complex server configurations exactly. The tradeoff is that it requires Docker Desktop to be installed and running, and the learning curve is steeper. If you are already comfortable with Docker, DDEV is excellent.</p>
+  <p><strong>DevKinsta</strong> is Kinsta's local development tool. Similar to LocalWP in UX, but optimized for deploying to Kinsta hosting. If you are a Kinsta customer, it is worth a look.</p>
+  <p><strong>Docker Compose</strong> gives you full manual control over your local server stack. Skip this unless you have a specific reason to manage your own containers. For a marketing site, it is complexity without benefit.</p>
+
+  <h3 id="wp-cli">WP-CLI: The WordPress Command Line</h3>
+  <p>WP-CLI lets you manage WordPress from the terminal. You will use it for installing plugins, exporting/importing databases, and running search-replace on URLs when migrating between environments.</p>
+  <p><strong>Installing WP-CLI on Mac:</strong></p>
+  <pre><code class="language-bash">curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+sudo mv wp-cli.phar /usr/local/bin/wp
+wp --info</code></pre>
+  <p><strong>Installing WP-CLI on Windows:</strong> Download <code>wp-cli.phar</code> from the WP-CLI website, place it in a directory in your PATH, and create a <code>wp.bat</code> file that runs <code>php wp-cli.phar %*</code>.</p>
+  <p><strong>Commands you will use often:</strong></p>
+  <pre><code class="language-bash"># Install and activate a plugin
+wp plugin install timber-library --activate
+
+# Export the database
+wp db export backup.sql
+
+# Import a database
+wp db import backup.sql
+
+# Search-replace URLs (critical for migration)
+wp search-replace 'http://my-site.local' 'https://mysite.com' --dry-run
+wp search-replace 'http://my-site.local' 'https://mysite.com'
+
+# Flush all caches
+wp cache flush
+
+# Regenerate image thumbnails
+wp media regenerate --yes</code></pre>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Always dry-run search-replace first</div>
+    <p>The <code>--dry-run</code> flag shows you what would change without actually changing it. Run this first, review the output, and only then run the real command. URL search-replace touches every row in your database. Getting it wrong can break your site in ways that are not obvious immediately.</p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 4: GITHUB              -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="github">
+  <h2 id="why-git">Version Control with GitHub</h2>
+  <p>Version control is not just for teams. Even if you are the only person working on your site, Git gives you three things you cannot get any other way:</p>
+  <p><strong>Rollback.</strong> Every commit is a snapshot. If a change breaks something, you can revert to the last working state in seconds. Without Git, "undo" means remembering what you changed and manually reversing it.</p>
+  <p><strong>Context for Claude Code.</strong> Claude Code works best when it can see your entire project structure. A Git repository with a clear history and a context file gives Claude Code everything it needs to understand your codebase and make changes that follow your existing patterns.</p>
+  <p><strong>Deployment.</strong> Once your theme is in a GitHub repository, deploying to your host becomes a push command (or an automated pipeline). No more uploading files via FTP and hoping you did not miss one.</p>
+
+  <h3 id="github-setup">Setting Up GitHub</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <p><strong>Create a GitHub account</strong> at <a href="https://github.com">github.com</a> if you do not have one. The free plan is sufficient.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <p><strong>Install Git.</strong> On Mac, open Terminal and type <code>git --version</code>. If Git is not installed, macOS will prompt you to install the Xcode Command Line Tools. On Windows, download Git from <a href="https://git-scm.com">git-scm.com</a>.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <p><strong>Install GitHub Desktop</strong> (recommended for non-developers) from <a href="https://desktop.github.com">desktop.github.com</a>. This gives you a visual interface for commits, pushes, and branch management. The terminal works too, but GitHub Desktop removes friction.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <p><strong>Configure your Git identity:</strong></p>
+      <pre><code class="language-bash">git config --global user.name "Your Name"
+git config --global user.email "you@example.com"</code></pre>
+    </div>
+  </div>
+
+  <h3 id="repo-strategy">Repository Strategy</h3>
+  <p>For most teams using this stack, the recommended approach is a <strong>theme-only repository</strong>. Your Git repo contains just your theme directory. WordPress core, plugins, and uploads are not tracked.</p>
+  <p>Why? WordPress core and plugins are managed by WordPress itself (updates via the admin dashboard). Tracking them in Git creates merge conflicts, bloats the repo, and adds complexity without benefit. Your theme is the custom code. That is what belongs in version control.</p>
+
+  <h3 id="gitignore">The .gitignore File</h3>
+  <p>Your <code>.gitignore</code> tells Git which files to skip. For a theme-only repo:</p>
+  <pre><code class="language-bash"># Dependencies (installed via npm/composer, not committed)
+node_modules/
+vendor/
+
+# Compiled CSS (rebuild on deploy or commit — your choice)
+# assets/css/app.css
+
+# Environment and OS files
+.env
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE files
+.vscode/
+.idea/</code></pre>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Should you commit compiled CSS?</div>
+    <p>There are two valid approaches. <strong>Option A: commit <code>assets/css/app.css</code></strong> so your theme is deploy-ready as-is. No build step needed on the server. This is simpler and what we recommend for most teams. <strong>Option B: build on deploy</strong> via a GitHub Action that runs <code>npm run build</code>. Cleaner repo, but more complex deployment. Start with Option A. Move to B when you outgrow it.</p>
+  </div>
+
+  <h3>Connecting Your Local Theme to GitHub</h3>
+  <pre><code class="language-bash"># Navigate to your theme directory
+cd ~/Local\ Sites/my-site/app/public/wp-content/themes/my-theme/
+
+# Initialize a Git repository
+git init
+
+# Add all files
+git add .
+
+# First commit
+git commit -m "Initial theme scaffold"
+
+# Create the repo on GitHub (via github.com or GitHub Desktop)
+# Then connect your local repo to it:
+git remote add origin https://github.com/your-username/my-theme.git
+git push -u origin main</code></pre>
+
+  <h3 id="daily-git">Daily Git Workflow</h3>
+  <p>The loop is simple: make changes locally, test them in your browser, commit the working changes, push to GitHub. Repeat.</p>
+  <pre><code class="language-bash"># See what changed
+git status
+
+# Stage specific files
+git add templates/front-page.twig tailwind.config.js
+
+# Commit with a meaningful message
+git commit -m "Add hero section to front page with brand colors"
+
+# Push to GitHub
+git push</code></pre>
+  <p>Commit often. Commit when something works. Write messages that describe what changed and why. Your future self (and Claude Code) will thank you.</p>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 5: THEME FOUNDATION    -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="theme-foundation">
+  <h2 id="directory-structure">Building Your Theme: The Foundation</h2>
+  <p>Here is the complete directory structure of a production Timber + Twig + Tailwind theme. This is the exact structure from a real production project.</p>
+
+  <div class="file-tree">my-theme/
+├── composer.json              <span class="comment">← Timber dependency</span>
+├── composer.lock
+├── vendor/                    <span class="comment">← Timber lives here (gitignored)</span>
+├── package.json               <span class="comment">← Tailwind dependency + build scripts</span>
+├── package-lock.json
+├── node_modules/              <span class="comment">← npm packages (gitignored)</span>
+├── tailwind.config.js         <span class="comment">← Design tokens: colors, fonts, spacing</span>
+├── src/
+│   └── css/
+│       └── app.css            <span class="comment">← Tailwind source (directives only)</span>
+├── assets/
+│   ├── css/
+│   │   └── app.css            <span class="comment">← Compiled Tailwind output</span>
+│   └── images/                <span class="comment">← Theme images (not in media library)</span>
+├── fonts/                     <span class="comment">← Self-hosted fonts</span>
+├── templates/
+│   ├── base.twig              <span class="comment">← Master layout (HTML shell)</span>
+│   ├── front-page.twig
+│   ├── page.twig
+│   ├── page-services.twig
+│   ├── page-contact.twig
+│   ├── archive.twig
+│   ├── single.twig
+│   ├── partials/
+│   │   ├── nav.twig
+│   │   └── footer.twig
+│   └── blocks/
+│       ├── hero-section.twig
+│       ├── cta-banner.twig
+│       └── ...
+├── blocks/                    <span class="comment">← Block PHP shims (Lazy Blocks + native)</span>
+│   ├── lazyblock-hero-section/
+│   │   └── block.php
+│   └── ...
+├── inc/
+│   ├── blocks.php             <span class="comment">← Block registration + render helper</span>
+│   └── admin-settings.php     <span class="comment">← Custom WP settings page</span>
+├── functions.php              <span class="comment">← Theme setup, Timber init, enqueues</span>
+├── index.php                  <span class="comment">← Required fallback</span>
+├── front-page.php             <span class="comment">← 3-line PHP dispatcher → Twig</span>
+├── page.php
+├── single.php
+├── archive.php
+└── style.css                  <span class="comment">← Theme metadata header only</span></div>
+
+  <h3 id="install-timber">Installing Timber via Composer</h3>
+  <p>Composer is PHP's package manager. You use it to install Timber (and its dependency, Twig) into your theme.</p>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <p><strong>Install Composer.</strong> On Mac: <code>brew install composer</code> (if you use Homebrew) or download the installer from <a href="https://getcomposer.org">getcomposer.org</a>. On Windows: download and run the Composer installer from the same site.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <p><strong>Navigate to your theme directory</strong> in the terminal:</p>
+      <pre><code class="language-bash">cd ~/Local\ Sites/my-site/app/public/wp-content/themes/my-theme/</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <p><strong>Initialize Composer and install Timber:</strong></p>
+      <pre><code class="language-bash">composer init --name="my-org/my-theme" --type="wordpress-theme" --no-interaction
+composer require timber/timber:^2.0</code></pre>
+      <p>This creates <code>composer.json</code>, <code>composer.lock</code>, and a <code>vendor/</code> directory containing Timber and Twig.</p>
+    </div>
+  </div>
+
+  <h3 id="tailwind-setup">Setting Up Tailwind CSS</h3>
+  <p>The simplest build setup uses the Tailwind CLI directly. No Vite. No webpack. No PostCSS configuration. Two npm scripts and you are done.</p>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <p><strong>Initialize npm and install Tailwind:</strong></p>
+      <pre><code class="language-bash">npm init -y
+npm install -D tailwindcss</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <p><strong>Create the Tailwind source file</strong> at <code>src/css/app.css</code>:</p>
+      <pre><code class="language-css">@tailwind base;
+@tailwind components;
+@tailwind utilities;</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <p><strong>Update <code>package.json</code></strong> with build scripts:</p>
+      <pre><code class="language-json">{
+  "name": "my-theme",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/css/app.css -o ./assets/css/app.css --watch",
+    "build": "npx tailwindcss -i ./src/css/app.css -o ./assets/css/app.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <p><strong>Run the dev watcher</strong> while you work:</p>
+      <pre><code class="language-bash">npm run dev</code></pre>
+      <p>This watches your templates for changes and recompiles the CSS automatically. Leave this running in a terminal tab while you develop. When you are ready to deploy, run <code>npm run build</code> to produce a minified production CSS file.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Rebuild after every template change</div>
+    <p>If you add a new Tailwind class to a Twig template and the style does not appear, check that <code>npm run dev</code> is running. The CSS only includes classes that Tailwind finds in your scanned files. This is easy to forget, and "the style is not applying" is almost always because the build is not running.</p>
+  </div>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="tailwind-config">Tailwind Config: Your Design Tokens</h3>
+  <p>The <code>tailwind.config.js</code> file is where your brand's design system lives in code. Colors, fonts, type scale, spacing, breakpoints. Here is an example config showing the structure. Replace the colors, fonts, and type scale with your own brand tokens:</p>
+
+  <div class="code-label">tailwind.config.js</div>
+  <pre><code class="language-javascript">/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './templates/**/*.twig',
+    './blocks/**/*.php',
+    './src/**/*.js',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        brown: {
+          500: '#250F04',
+          400: '#3F1906',
+          300: '#59301B',
+          200: '#735950',
+          100: '#E5C7B8',
+        },
+        blue: {
+          500: '#25495C',
+          400: '#7090A0',
+          300: '#B8D6E5',
+          200: '#CDE2ED',
+          100: '#E3EFF5',
+        },
+        gold: {
+          500: '#5C594A',
+          400: '#A09B81',
+          300: '#E5DEB8',
+          200: '#EDE8CD',
+          100: '#F5F2E3',
+        },
+        olive: {
+          500: '#47470E',
+          400: '#7D7D19',
+          300: '#B2B224',
+          200: '#C9C966',
+          100: '#E0E0A7',
+        },
+      },
+      fontFamily: {
+        display: ['"Humble Belongs"', 'serif'],
+        sans: ['"Public Sans"', 'sans-serif'],
+      },
+      fontSize: {
+        'title':      ['90px', { lineHeight: '100px' }],
+        'quote':      ['56px', { lineHeight: '100px' }],
+        'h1':         ['64px', { lineHeight: '100px' }],
+        'h2':         ['48px', { lineHeight: '100px' }],
+        'h3':         ['36px', { lineHeight: '110%' }],
+        'h4':         ['24px', { lineHeight: '110%' }],
+        'subheading': ['18px', { lineHeight: '140%' }],
+        'body':       ['14px', { lineHeight: '140%' }],
+        'caption':    ['11px', { lineHeight: '130%' }],
+      },
+      screens: {
+        'sm': '480px',
+        'md': '768px',
+        'lg': '1025px',
+        'xl': '1440px',
+      },
+    },
+  },
+  plugins: [],
+}</code></pre>
+
+  <p>The <code>content</code> array is critical. It tells Tailwind which files to scan for class names. If a class you are using does not appear in the compiled CSS, the most likely cause is that the file containing it is not listed here. In one of our builds, we initially forgot to include <code>'./blocks/**/*.php'</code> in the content array. The Lazy Block PHP shims contain Tailwind class references (passed via the render helper), and those classes were silently dropped from the compiled CSS. Everything looked right in the templates, but the blocks rendered without styles. Adding the blocks directory to the content array fixed it immediately.</p>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="functions-php">functions.php: The Core Setup</h3>
+  <p>This is the most important PHP file in your theme. It initializes Timber, registers menus, enqueues your Tailwind CSS, and defines the global data available in every Twig template. Here is an annotated production example:</p>
+
+  <div class="code-label">functions.php</div>
+  <pre><code class="language-php">&lt;?php
+/**
+ * Theme functions — Timber + Twig + Tailwind
+ */
+
+// Load Timber via Composer autoload.
+// This is the bridge between WordPress and Twig.
+if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+    wp_die( 'Timber not found. Run &lt;code&gt;composer install&lt;/code&gt; in the theme directory.' );
+}
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Timber\Timber;
+use Timber\Site;
+
+// Initialize Timber. This must happen before anything else.
+Timber::init();
+
+/**
+ * Global context — data available in EVERY Twig template.
+ *
+ * Anything you add here can be used as {{ variable_name }} in any .twig file.
+ */
+add_filter( 'timber/context', function( $context ) {
+    $context['site']    = new Site();
+    $context['options'] = get_option( 'theme_site_content', [] );
+
+    // Navigation menus (registered below)
+    $context['nav_primary'] = Timber::get_menu( 'primary' );
+    $context['nav_footer']  = Timber::get_menu( 'footer' );
+
+    // Useful globals
+    $context['site_url']  = home_url();
+    $context['theme_uri'] = get_template_directory_uri();
+
+    return $context;
+} );
+
+/**
+ * Theme setup: menus, thumbnails, HTML5 support.
+ */
+add_action( 'after_setup_theme', function() {
+    register_nav_menus( [
+        'primary' => __( 'Primary Navigation', 'my-theme' ),
+        'footer'  => __( 'Footer Navigation', 'my-theme' ),
+    ] );
+    add_theme_support( 'post-thumbnails' );
+    add_theme_support( 'title-tag' );
+    add_theme_support( 'html5', [
+        'search-form', 'comment-form', 'comment-list',
+        'gallery', 'caption'
+    ] );
+} );
+
+/**
+ * Enqueue styles and scripts.
+ */
+add_action( 'wp_enqueue_scripts', function() {
+    $theme_uri = get_template_directory_uri();
+    $version   = wp_get_theme()-&gt;get( 'Version' );
+
+    // Tailwind compiled CSS
+    wp_enqueue_style( 'theme-styles',
+        $theme_uri . '/assets/css/app.css', [], $version
+    );
+
+    // Google Fonts (Public Sans)
+    wp_enqueue_style( 'public-sans',
+        'https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap',
+        [], null
+    );
+} );
+
+/**
+ * Tell Timber where to find Twig templates.
+ */
+add_filter( 'timber/locations', function( $paths ) {
+    $paths[] = get_template_directory() . '/templates';
+    return $paths;
+} );
+
+/** Allow SVG uploads. */
+add_filter( 'upload_mimes', function( $mimes ) {
+    $mimes['svg'] = 'image/svg+xml';
+    return $mimes;
+} );</code></pre>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="timber-mental-model">How Timber + Twig Works: The Mental Model</h3>
+  <p>WordPress has a template hierarchy. When someone visits your homepage, WordPress looks for <code>front-page.php</code>. When they visit a blog post, it looks for <code>single.php</code>. This does not change with Timber.</p>
+  <p>What changes is what those PHP files do. Without Timber, <code>front-page.php</code> contains a mix of PHP, HTML, and WordPress function calls. With Timber, it becomes a 3-line dispatcher:</p>
+
+  <div class="code-label">front-page.php — the 3-line dispatcher</div>
+  <pre><code class="language-php">&lt;?php
+// front-page.php — dispatches to Twig template
+$context = Timber::context();
+$context['post'] = Timber::get_post();
+Timber::render( 'front-page.twig', $context );</code></pre>
+
+  <p>That is it. <strong>Every PHP template file in a Timber theme looks like this.</strong> Three lines: get the context, add post-specific data, render the Twig template. The real work, the HTML structure, the layout, the Tailwind classes, happens in the <code>.twig</code> file.</p>
+  <p>The <code>$context</code> array is the data bridge between PHP and Twig. The global context (defined in <code>functions.php</code>) gives you site-wide data like menus and the site URL. Each PHP file adds page-specific data. In the Twig template, everything in the context is available as a variable.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Twig syntax in 60 seconds</div>
+    <p><code>{{ variable }}</code> outputs a value. <code>{% if condition %} ... {% endif %}</code> is a conditional. <code>{% for item in items %} ... {% endfor %}</code> is a loop. <code>{% include 'partials/nav.twig' %}</code> includes another template. <code>{% extends 'base.twig' %}</code> inherits from a parent template. <code>{# This is a comment #}</code> is invisible in the output. That is 95% of what you will use.</p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 6: TEMPLATES           -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section section-blue" id="theme-templates">
+  <h2 id="base-twig">Building Your Theme: Templates</h2>
+  <p><code>base.twig</code> is your master layout. Every page on your site extends it. It defines the HTML shell, includes the nav and footer, and provides a <code>{% block content %}</code> that page templates fill in.</p>
+
+  <div class="code-label">templates/base.twig — master layout</div>
+  <pre><code class="language-twig">&lt;!DOCTYPE html&gt;
+&lt;html {{ site.language_attributes }}&gt;
+&lt;head&gt;
+  &lt;meta charset="{{ site.charset }}"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  {{ function('wp_head') }}
+  {% block head_extra %}{% endblock %}
+&lt;/head&gt;
+&lt;body class="{{ function('body_class') }}"&gt;
+{{ function('wp_body_open') }}
+
+&lt;div class="site-wrap"&gt;
+  {% include 'partials/nav.twig' %}
+
+  &lt;main id="main"&gt;
+    {% block content %}{% endblock %}
+  &lt;/main&gt;
+
+  {% include 'partials/footer.twig' %}
+&lt;/div&gt;
+
+{{ function('wp_footer') }}
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <p>Note the <code>{{ function('wp_head') }}</code> and <code>{{ function('wp_footer') }}</code> calls. These are Timber's way of calling WordPress functions from Twig. They output your enqueued CSS and JS, SEO plugin meta tags, analytics scripts, and anything else plugins hook into <code>wp_head</code> and <code>wp_footer</code>. Never remove these.</p>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="nav-partial">Navigation</h3>
+  <p>The navigation partial receives the menu from the global context (<code>nav_primary</code>, which we set in <code>functions.php</code>). Here is a real navigation with a responsive mobile menu:</p>
+
+  <div class="code-label">templates/partials/nav.twig</div>
+  <pre><code class="language-twig">{# partials/nav.twig #}
+&lt;header class="bg-brown-500 sticky top-0 z-50"&gt;
+  &lt;nav class="container mx-auto flex items-center justify-between py-4 px-6"&gt;
+
+    {# Left: nav links (desktop) #}
+    &lt;div class="hidden lg:flex items-center gap-8"&gt;
+      {% for item in nav_primary.items %}
+        &lt;a href="{{ item.link }}"
+           class="text-white text-sm font-sans hover:text-blue-300 transition-colors
+                  {{ item.current ? 'text-blue-300' : '' }}"&gt;
+          {{ item.title }}
+        &lt;/a&gt;
+      {% endfor %}
+    &lt;/div&gt;
+
+    {# Center: logo #}
+    &lt;a href="{{ site_url }}" class="absolute left-1/2 -translate-x-1/2"&gt;
+      &lt;img src="{{ theme_uri }}/assets/images/logo-header.svg"
+           alt="Site logo" class="h-10"&gt;
+    &lt;/a&gt;
+
+    {# Right: CTA button (desktop) #}
+    &lt;div class="hidden lg:block"&gt;
+      &lt;a href="{{ site_url }}/contact/"
+         class="bg-white text-brown-500 font-sans text-sm font-semibold
+                px-6 py-2 rounded-full hover:bg-blue-300 transition-colors"&gt;
+        Contact us
+      &lt;/a&gt;
+    &lt;/div&gt;
+
+    {# Mobile hamburger #}
+    &lt;button id="mobile-toggle" class="lg:hidden text-white text-2xl"&gt;
+      &#9776;
+    &lt;/button&gt;
+  &lt;/nav&gt;
+
+  {# Mobile menu (hidden by default) #}
+  &lt;div id="mobile-menu" class="hidden lg:hidden bg-brown-400 px-6 pb-4"&gt;
+    {% for item in nav_primary.items %}
+      &lt;a href="{{ item.link }}"
+         class="block text-white text-sm py-2 border-b border-brown-300"&gt;
+        {{ item.title }}
+      &lt;/a&gt;
+    {% endfor %}
+    &lt;a href="{{ site_url }}/contact/"
+       class="block text-olive-300 text-sm font-semibold py-3 mt-2"&gt;
+      Contact us
+    &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+
+&lt;script&gt;
+document.getElementById('mobile-toggle').addEventListener('click', function() {
+  document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+&lt;/script&gt;</code></pre>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="footer-partial">Footer</h3>
+  <p>The footer follows the same pattern. It receives its data from the global context and renders with Tailwind utility classes. Dynamic data (like the current year) uses Twig's built-in date filter:</p>
+  <pre><code class="language-twig">&lt;!-- Dynamic copyright year --&gt;
+&lt;p&gt;&amp;copy; {{ "now"|date("Y") }} {{ site.name }}&lt;/p&gt;</code></pre>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="page-templates">Page Templates</h3>
+  <p>Every page template follows the same structure: extend <code>base.twig</code>, fill in the <code>content</code> block. The PHP dispatcher is always 3 lines.</p>
+
+  <h4>Generic page (page.php / page.twig)</h4>
+  <div class="code-label">templates/page.twig</div>
+  <pre><code class="language-twig">{# page.twig #}
+{% extends 'base.twig' %}
+
+{% block content %}
+  &lt;article class="py-16 px-6 max-w-3xl mx-auto"&gt;
+    &lt;h1 class="font-display text-h1 mb-8"&gt;{{ post.title }}&lt;/h1&gt;
+    &lt;div class="prose font-sans text-body"&gt;
+      {{ post.content }}
+    &lt;/div&gt;
+  &lt;/article&gt;
+{% endblock %}</code></pre>
+
+  <p><code>{{ post.content }}</code> renders whatever is in the WordPress block editor for that page. This is important: you do not have to rebuild every page as a custom template. Pages that use the block editor for content can use this generic template. Reserve custom page templates for pages with unique layouts (homepage, services page, contact page).</p>
+
+  <h4>Blog archive (archive.php / archive.twig)</h4>
+  <div class="code-label">templates/archive.twig</div>
+  <pre><code class="language-twig">{# archive.twig #}
+{% extends 'base.twig' %}
+
+{% block content %}
+  &lt;section class="py-16 px-6 max-w-5xl mx-auto"&gt;
+    &lt;h1 class="font-display text-h2 mb-12"&gt;Blog&lt;/h1&gt;
+
+    &lt;div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"&gt;
+      {% for post in posts %}
+        &lt;article class="border border-gold-200 rounded-2xl overflow-hidden"&gt;
+          {% if post.thumbnail %}
+            &lt;img src="{{ post.thumbnail.src('medium_large') }}"
+                 alt="{{ post.title }}"
+                 class="w-full h-48 object-cover"&gt;
+          {% endif %}
+          &lt;div class="p-6"&gt;
+            &lt;h2 class="font-sans font-bold text-h4 mb-2"&gt;
+              &lt;a href="{{ post.link }}" class="hover:text-blue-500"&gt;
+                {{ post.title }}
+              &lt;/a&gt;
+            &lt;/h2&gt;
+            &lt;p class="text-body text-brown-200"&gt;
+              {{ post.preview.length(25).read_more('') }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+      {% endfor %}
+    &lt;/div&gt;
+  &lt;/section&gt;
+{% endblock %}</code></pre>
+
+  <h4>Single post (single.php / single.twig)</h4>
+  <div class="code-label">templates/single.twig</div>
+  <pre><code class="language-twig">{# single.twig #}
+{% extends 'base.twig' %}
+
+{% block content %}
+  &lt;article&gt;
+    &lt;header class="bg-brown-500 text-white py-16 px-6"&gt;
+      &lt;div class="max-w-3xl mx-auto"&gt;
+        &lt;h1 class="font-display text-h1 mb-4"&gt;{{ post.title }}&lt;/h1&gt;
+        &lt;p class="text-blue-300 text-subheading"&gt;{{ post.preview.length(30) }}&lt;/p&gt;
+        &lt;div class="flex items-center gap-3 mt-8"&gt;
+          {% if post.author.avatar %}
+            &lt;img src="{{ post.author.avatar.src }}" class="w-10 h-10 rounded-full"&gt;
+          {% endif %}
+          &lt;div&gt;
+            &lt;p class="text-sm font-semibold"&gt;{{ post.author.name }}&lt;/p&gt;
+            &lt;p class="text-caption text-blue-400"&gt;{{ post.date }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;div class="py-12 px-6 max-w-3xl mx-auto prose font-sans text-body"&gt;
+      {{ post.content }}
+    &lt;/div&gt;
+  &lt;/article&gt;
+{% endblock %}</code></pre>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 7: CUSTOM FIELDS       -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="custom-fields">
+  <h2 id="when-custom-fields">Custom Fields and Content Blocks</h2>
+  <p>The WordPress block editor handles most content needs. But there are cases where you want structured, reusable content that goes beyond what the editor provides: a hero section with specific fields (eyebrow text, headline, CTA button, background style), a pricing card with a repeating list of features, or a testimonial block with author attribution.</p>
+  <p>For this stack, there are two excellent options: <strong>Lazy Blocks</strong> and <strong>ACF Pro</strong>. We have used both in production. Here is when each one shines.</p>
+
+  <h3 id="lazy-blocks">Lazy Blocks</h3>
+  <details class="collapsible" open>
+    <summary>How Lazy Blocks connects to Twig</summary>
+    <div class="collapsible-body">
+  <p>Lazy Blocks is a free WordPress plugin that lets you create custom Gutenberg blocks through the admin UI, with a visual field builder and the ability to render output through Twig templates. It is the fastest path from "I need a custom block" to "it is live on the page." In one of our production themes, Lazy Blocks powers three blocks: a hero section, a metrics bar, and a service pricing tier.</p>
+
+  <p>The key configuration is setting the output method to <strong>"Theme Template"</strong> in the Lazy Blocks editor. This tells Lazy Blocks to look for a PHP file at <code>blocks/lazyblock-{slug}/block.php</code> in your theme. That PHP file is a 1-line shim that hands off to your Twig template:</p>
+
+  <div class="code-label">blocks/lazyblock-hero-section/block.php</div>
+  <pre><code class="language-php">&lt;?php
+// blocks/lazyblock-hero-section/block.php
+echo theme_block_render( 'hero-section', $attributes );</code></pre>
+
+  <p>The <code>theme_block_render()</code> helper (defined in <code>inc/blocks.php</code>) merges the block's field values into a Timber context and compiles the corresponding Twig template. Here is that helper:</p>
+
+  <div class="code-label">inc/blocks.php — shared render helper</div>
+  <pre><code class="language-php">&lt;?php
+// inc/blocks.php
+
+function theme_block_render( $template, $attrs = [] ) {
+    $context = Timber::context();
+    $context['attrs'] = $attrs;
+    return Timber::compile( "blocks/{$template}.twig", $context );
+}</code></pre>
+
+  <p>Then the Twig template receives everything through <code>attrs</code>:</p>
+
+  <div class="code-label">templates/blocks/hero-section.twig</div>
+  <pre><code class="language-twig">{# templates/blocks/hero-section.twig #}
+{% set bg_map = {
+  'brown': 'bg-brown-500 text-white',
+  'blue':  'bg-blue-300 text-brown-500',
+  'white': 'bg-white text-brown-500',
+} %}
+{% set bg_class = bg_map[attrs.bg_style] ?? 'bg-brown-500 text-white' %}
+
+&lt;section class="{{ bg_class }} relative overflow-hidden min-h-[540px] flex items-center"&gt;
+  &lt;div class="container mx-auto relative z-10 text-center py-24"&gt;
+    {% if attrs.eyebrow %}
+      &lt;p class="font-sans text-sm tracking-widest uppercase mb-4"&gt;
+        {{ attrs.eyebrow }}
+      &lt;/p&gt;
+    {% endif %}
+    {% if attrs.headline %}
+      &lt;h1 class="font-display text-title leading-none mb-8"&gt;
+        {{ attrs.headline }}
+      &lt;/h1&gt;
+    {% endif %}
+    {% if attrs.cta_text and attrs.cta_url %}
+      &lt;a href="{{ attrs.cta_url }}"
+         class="border rounded-full px-8 py-3 text-sm font-sans transition-colors"&gt;
+        {{ attrs.cta_text }}
+      &lt;/a&gt;
+    {% endif %}
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Lazy Blocks gotchas (learned the hard way)</div>
+    <p><strong>Hyphens vs. underscores.</strong> Lazy Blocks auto-generates control names with hyphens (<code>tier-name</code>), but Twig templates expect underscores (<code>tier_name</code>). You must manually change every control name in the Lazy Blocks UI. Define your Twig variable names first, then create the controls to match.</p>
+    <p><strong>Repeater controls are hidden.</strong> When adding a new control, repeaters are in the "Layout" category of the type dropdown, not where you would expect them.</p>
+    <p><strong>Theme Template mode requires the file to exist first.</strong> Lazy Blocks detects the <code>block.php</code> shim by looking in <code>blocks/lazyblock-{slug}/</code>. Create the file before setting the output mode, or Lazy Blocks will not show the template path option.</p>
+    <p><strong>The slug does not auto-populate</strong> if you skip the setup wizard. You must manually type <code>lazyblock/{your-slug}</code> in the slug field.</p>
+  </div>
+    </div>
+  </details>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="acf-pro">ACF Pro</h3>
+  <p>Advanced Custom Fields Pro is the long-standing standard for custom fields in WordPress. It is a paid plugin ($49/year for personal use) that gives you a powerful field builder, field group management, and deep integration with the WordPress admin.</p>
+  <p>ACF Pro is the better choice when you need fields attached to pages or post types (not just Gutenberg blocks). For example: a "Team Member" custom post type with fields for role, headshot, and LinkedIn URL. Or a settings page with fields for the company address and phone number that appear in the footer.</p>
+
+  <h4>ACF data in Twig</h4>
+  <p>Timber makes ACF fields available on post objects automatically:</p>
+  <pre><code class="language-twig">{# Access an ACF field called 'hero_headline' on the current post #}
+{{ post.meta('hero_headline') }}
+
+{# ACF image field (returns an array with url, alt, etc.) #}
+{% set hero_image = post.meta('hero_image') %}
+&lt;img src="{{ hero_image.url }}" alt="{{ hero_image.alt }}"&gt;
+
+{# ACF repeater field #}
+{% for feature in post.meta('features') %}
+  &lt;li&gt;{{ feature.feature_text }}&lt;/li&gt;
+{% endfor %}</code></pre>
+
+  <h4>Registering field groups in PHP (recommended)</h4>
+  <p>You can create field groups through the ACF admin UI, but registering them in PHP (or exporting to JSON) makes them version-controllable. ACF Pro supports JSON sync: save field group definitions as JSON files in an <code>acf-json/</code> directory in your theme, and they will be automatically loaded.</p>
+
+  <div class="sub-divider"></div>
+
+  <details class="collapsible" open>
+    <summary>ACF Flexible Content: The Page Builder Pattern</summary>
+    <div class="collapsible-body">
+  <p>For sites with many page types and a content team that needs to assemble pages from reusable modules, ACF Pro's Flexible Content field is the most powerful approach. This is the pattern we used in a Sanity-to-WordPress migration, where the headless CMS had a structured page builder that needed to be replicated in WordPress.</p>
+  <p>The concept: a single ACF Flexible Content field called "Page Builder" is attached to pages. Each "layout" in the Flexible Content field represents a page module (hero, two-column content, testimonials, CTA, etc.). In the WordPress editor, the content team adds modules from a dropdown list, fills in the fields, and reorders them. On the frontend, a Twig template loops through the modules and dynamically includes the right template for each one:</p>
+
+  <div class="code-label">templates/page.twig — flexible content renderer</div>
+  <pre><code class="language-twig">{# page.twig — the page builder renderer #}
+{% extends "base.twig" %}
+{% block content %}
+  {% for block in page_builder %}
+    {% set layout = block.acf_fc_layout %}
+    {% include "modules/" ~ layout|replace({'_': '-'}) ~ ".twig"
+       with {block: block} ignore missing %}
+  {% endfor %}
+{% endblock %}</code></pre>
+
+  <p>Each module template receives its data through the <code>block</code> variable. A hero module template only knows about hero fields. A testimonial module template only knows about testimonial fields. The page builder template does not care which modules are on the page, or in what order. It just loops and delegates.</p>
+  <p>In one production project, this pattern supported 25+ modules, from simple rich text blocks to complex resource card grids with AJAX filtering. The ACF field registration for all of these lived in a single PHP file (<code>inc/acf-fields.php</code>, approximately 1,200 lines), registered entirely in code with no dependency on the ACF admin UI.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">When to use Flexible Content vs. Gutenberg blocks</div>
+    <p>Use ACF Flexible Content when the content team needs to build pages from a curated set of branded modules, with strict field definitions and a predictable layout. Use Gutenberg blocks (via Lazy Blocks or native registration) when you want a more freeform editing experience, or when you only need a few custom blocks mixed in with standard WordPress blocks. Both patterns render through Twig. You can even use both on the same site.</p>
+  </div>
+    </div>
+  </details>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="block-render">The Shared Render Pipeline</h3>
+  <p>One of the most elegant patterns in this stack is using a single render helper for all blocks, whether they are Lazy Blocks or native Gutenberg blocks. The pipeline looks like this:</p>
+
+  <div class="file-tree">Block (Gutenberg editor or Lazy Blocks)
+  → block.php shim or render_callback
+    → theme_block_render( $template, $attrs )
+      → Timber::context() + $attrs merged
+        → Timber::compile( "blocks/{$template}.twig" )
+          → HTML with Tailwind classes</div>
+
+  <p>This means every block in your theme renders through the same Timber/Twig pathway. The editor defines the fields. The PHP layer dispatches. The Twig template handles presentation. Clean separation, one pattern to learn, and Claude Code can follow this convention for every new block you add.</p>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 8: MIGRATION           -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="migration">
+  <h2 id="migration-mindset">Migration</h2>
+  <p>Every migration follows the same principle: <strong>separate content migration from design migration.</strong> First, get your content into WordPress (or confirm it is already there). Then build the theme that presents it. Never try to do both at once.</p>
+  <p>Always migrate to a local environment first. Build the new theme locally. QA it against the live site. Only deploy when everything matches.</p>
+
+  <h3 id="from-elementor">Migrating from Elementor</h3>
+  <p>We have done this twice. The short version: there is no automated path. Elementor stores your content in a proprietary JSON structure, and no converter reliably extracts it into clean HTML or block editor content. The migration is manual, and it is worth doing properly.</p>
+
+  <h4>How Elementor stores content</h4>
+  <p>Every Elementor page stores its layout and content in the <code>_elementor_data</code> postmeta field as a JSON blob. The JSON contains nested elements, each with their own settings, styles, and content. This structure is deeply coupled to Elementor's rendering engine. Deactivating Elementor causes the page to render as raw JSON or shortcodes, or nothing at all.</p>
+
+  <h4>The clean break approach (recommended)</h4>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <p><strong>Keep the Elementor theme active on your live site.</strong> Do not touch it. It is your visual reference and content source.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <p><strong>Build your new Timber theme in LocalWP.</strong> For each page, open the live Elementor page in one browser tab and your local site in another. Rebuild each section as a Twig template, extracting text and images from the live page.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <p><strong>Visual QA every page.</strong> Compare your local build against the live site section by section. Check headings, body text, images, spacing, colors, mobile responsiveness. This is where Claude Code is particularly useful: it can take screenshots of both versions and identify differences.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <p><strong>Only switch themes when everything matches.</strong> Activate the new theme. Deactivate Elementor. Then deactivate Elementor Pro. Then delete both plugins. Clean up leftover postmeta data.</p>
+    </div>
+  </div>
+
+  <p><strong>On image assets:</strong> Images exported from Figma or downloaded from the Elementor site often had opaque filenames (<code>Frame-1073714027-1.png</code>, <code>Group-50.png</code>) that gave no indication of their contents. Several turned out to be tiny placeholder files (48x48px) that looked like colored rectangles at full size. Build a visual inventory of every image asset before writing templates. Name them descriptively (<code>hero-tree-overlay.png</code>, not <code>Group-9.png</code>).</p>
+  <p><strong>On timeline:</strong> Do not underestimate the manual work. A 5-page Elementor site took meaningful time to rebuild in Twig. Each section needs to be recreated, tested, and visually matched. Budget for this. The result is worth it, but it is not a weekend project.</p>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="from-sanity">Migrating from a Headless CMS (Sanity)</h3>
+  <details class="collapsible">
+    <summary>Full Sanity-to-WordPress migration walkthrough</summary>
+    <div class="collapsible-body">
+  <p>We migrated a production site from Sanity CMS + Next.js to WordPress with a Timber theme. The content lived in Sanity's Content Lake, the frontend was a Next.js app deployed on Vercel, and the goal was to consolidate everything into a single WordPress instance on Cloudways. Here is how the migration actually worked.</p>
+
+  <h4>Step 1: Export content from Sanity</h4>
+  <p>Sanity stores content in a document database accessible via GROQ (their query language). We wrote a Node.js script (<code>fetch-sanity.mjs</code>) that pulled all documents via the Sanity Content Lake API and saved them as a single JSON file:</p>
+  <pre><code class="language-bash"># The export script uses GROQ to fetch all documents
+# Output: sanity-export/all-documents.json
+node migration/fetch-sanity.mjs</code></pre>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">GROQ cursor pagination syntax</div>
+    <p>If you are paginating through large datasets, the cursor condition must be <strong>inside</strong> the filter brackets: <code>*[_type == "page" && _id > $lastId]</code>. Putting the cursor outside the brackets (<code>*[_type == "page"][_id > $lastId]</code>) causes incorrect results or API errors. This cost us hours.</p>
+  </div>
+
+  <h4>Step 2: Map Sanity document types to WordPress</h4>
+  <p>Every Sanity document type needs a WordPress equivalent. Here is an example mapping from a real migration:</p>
+  <table>
+    <thead><tr><th>Sanity Type</th><th>WordPress Post Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>page</td><td>page</td><td>ACF Flexible Content for page builder blocks</td></tr>
+      <tr><td>blog</td><td>blog (CPT)</td><td>Custom post type with ACF fields</td></tr>
+      <tr><td>ebook / guide / webinar</td><td>Matching CPTs</td><td>All share a single-resource.twig template</td></tr>
+      <tr><td>author</td><td>author (CPT)</td><td>Author profiles as posts, not WP users</td></tr>
+      <tr><td>tag</td><td>content_tag (taxonomy)</td><td>Custom taxonomy across resource CPTs</td></tr>
+    </tbody>
+  </table>
+  <p>Register your custom post types and taxonomies in PHP (<code>inc/post-types.php</code> and <code>inc/taxonomies.php</code>) before running the import. The import scripts need the post types to exist.</p>
+
+  <h4>Step 3: Run the migration pipeline</h4>
+  <p>The migration used a 7-step Node.js pipeline. Each step ran independently and could be re-run without duplicating content:</p>
+  <pre><code class="language-bash"># Run steps in order:
+node migration/migrate.mjs images     # Download from Sanity CDN → wp media import
+node migration/migrate.mjs tags       # Create taxonomy terms
+node migration/migrate.mjs authors    # Create author CPT posts
+node migration/migrate.mjs resources  # Create blog/ebook/guide/webinar/tool posts
+node migration/migrate.mjs pages      # Create WP pages with ACF page builder data
+node migration/migrate.mjs settings   # Populate ACF Options pages
+node migration/migrate.mjs refs       # Second pass: resolve cross-references</code></pre>
+
+  <h4>The two-pass approach for references</h4>
+  <p>This is the most important architectural decision in a Sanity migration. Sanity documents reference each other by internal ID (e.g., a blog post references an author by their Sanity <code>_id</code>). But when you create the blog post in WordPress, the author might not exist yet.</p>
+  <p>The solution is a two-pass approach with an ID map:</p>
+  <ul>
+    <li><strong>First pass (steps 1-6):</strong> Create all content in WordPress. After each creation, record the mapping of Sanity ID to WordPress post ID in an <code>id-map.json</code> file.</li>
+    <li><strong>Second pass (step 7, "refs"):</strong> Walk through all posts and resolve ACF relationship fields using the ID map. Now that every post exists in WordPress, you can set the correct relationship IDs.</li>
+  </ul>
+
+  <h4>Handling Portable Text (rich text)</h4>
+  <p>Sanity stores rich text as "Portable Text," a structured JSON format. WordPress needs HTML. We wrote a custom <code>portableTextToHTML()</code> converter that handled:</p>
+  <ul>
+    <li>Standard blocks (paragraphs, headings, lists)</li>
+    <li>Inline marks (bold, italic, links)</li>
+    <li>Custom block types specific to the Sanity schema</li>
+    <li>Special cases like <code>listItem: "checkmarks"</code> rendering as <code>&lt;ul class="check-list"&gt;</code></li>
+  </ul>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Never use strip_tags() on converted Portable Text</div>
+    <p>Calling <code>strip_tags()</code> on the HTML output silently removes <code>&lt;em&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;a&gt;</code>, and other inline elements. If you need a plain-text excerpt, write a dedicated text extractor. Do not strip tags from content or description fields.</p>
+  </div>
+
+  <h4>Importing images</h4>
+  <p>Sanity hosts images on its own CDN with content-addressable hashes. The migration script downloads each image by its Sanity hash, imports it into the WordPress media library via WP-CLI (<code>wp media import</code>), and records the Sanity hash to WordPress attachment ID mapping in <code>id-map.json</code>.</p>
+
+  <div class="callout callout-lesson">
+    <div class="callout-title">The ACF _fieldname meta key trap</div>
+    <p>This was the most painful lesson of the migration. When you set ACF field values directly via <code>wp post meta update</code> (bypassing ACF's <code>update_field()</code> function), the shadow <code>_fieldname</code> meta key is never written. For example, setting <code>cover_image</code> to an attachment ID works at the database level, but <code>get_field('cover_image')</code> returns nothing because the corresponding <code>_cover_image</code> meta key (which stores the ACF field key like <code>field_res_cover</code>) does not exist.</p>
+    <p>This silently broke cover images on approximately 100 posts. The fix was a bulk SQL INSERT:</p>
+    <pre><code class="language-bash">INSERT INTO wp_postmeta (post_id, meta_key, meta_value)
+SELECT post_id, '_cover_image', 'field_res_cover'
+FROM wp_postmeta WHERE meta_key = 'cover_image'
+AND post_id NOT IN (
+  SELECT post_id FROM wp_postmeta WHERE meta_key = '_cover_image'
+);</code></pre>
+    <p><strong>Always use <code>update_field()</code> in migration scripts, or manually add the <code>_fieldname</code> meta after any direct meta writes.</strong></p>
+  </div>
+
+  <h4>URL redirects</h4>
+  <p>The old Next.js site had different URL patterns than WordPress will generate. Set up 301 redirects in <code>functions.php</code> or use a plugin like Redirection to map old URLs to new ones. Do this before the DNS switch, so search engines see clean redirects from day one.</p>
+
+  <h4>The DNS flip</h4>
+  <p>The original site was on Vercel, which uses CNAME records for routing. WordPress on Cloudways needs A records pointing to the server IP. The key steps:</p>
+  <ul>
+    <li>Delete the Vercel CNAME for <code>www</code></li>
+    <li>Add A records for both <code>@</code> and <code>www</code> pointing to the Cloudways server IP</li>
+    <li>Make sure WordPress <code>siteurl</code> and <code>home</code> are set to the final domain <em>before</em> flipping DNS, but keep the temporary Cloudways URL accessible until DNS propagates</li>
+  </ul>
+    </div>
+  </details>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="db-migration">Database Migration Between Environments</h3>
+  <p>Moving a WordPress database between local, staging, and production requires updating every URL in the database. WordPress stores absolute URLs everywhere: in post content, option values, and serialized data.</p>
+
+  <pre><code class="language-bash"># Export from local
+wp db export local-backup.sql
+
+# Import on the target environment
+wp db import local-backup.sql
+
+# ALWAYS dry-run first to see what would change
+wp search-replace 'http://my-site.local' 'https://mysite.com' --dry-run
+
+# Run the actual replacement
+wp search-replace 'http://my-site.local' 'https://mysite.com'
+
+# Flush caches after migration
+wp cache flush</code></pre>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Serialized data matters</div>
+    <p>WordPress stores some data as PHP serialized strings, which include character counts. A naive find-and-replace will corrupt serialized data because the character count will not match after the URL changes. WP-CLI's <code>search-replace</code> handles this correctly. Do not use a SQL find-and-replace tool. Use WP-CLI.</p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 9: DEPLOYMENT          -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section section-gold" id="deployment">
+  <h2 id="deploy-concepts">Deployment</h2>
+  <p>Deploying a Timber theme involves moving three things: theme files, the database, and uploads (media). In most cases, you will deploy the theme files frequently (every change) and the database only during initial setup or major content migrations.</p>
+
+  <h4>Pre-deploy checklist</h4>
+  <ul>
+    <li>Run <code>npm run build</code> to compile production-minified CSS.</li>
+    <li>Run <code>composer install --no-dev</code> to install dependencies without dev packages.</li>
+    <li>Commit everything to Git.</li>
+    <li>Verify the site works locally with the production CSS.</li>
+    <li>Back up the live site's database before making changes.</li>
+  </ul>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="deploy-siteground">Deploying to SiteGround</h3>
+  <h4>Initial setup</h4>
+  <p>Create your WordPress site through SiteGround's Site Tools. Set the PHP version to 8.1 or higher under PHP Manager. Enable SSH under Devs > SSH Keys Manager (you will need to add your public SSH key).</p>
+
+  <h4>Theme deployment via SFTP</h4>
+  <p>The most straightforward approach. Use FileZilla, Cyberduck, or Transmit. Connect with your SiteGround SFTP credentials (found in Site Tools > FTP Accounts). Upload your entire theme directory to <code>/public_html/wp-content/themes/</code>. Activate the theme via WP Admin.</p>
+
+  <h4>Theme deployment via SSH script</h4>
+  <p>For repeatable deploys, write a simple script that pulls from GitHub via SSH:</p>
+  <div class="code-label">deploy.sh — SiteGround</div>
+  <pre><code class="language-bash">#!/bin/bash
+# deploy.sh — run from your local machine
+ssh user@your-server.siteground.biz -p 18765 << 'REMOTE'
+  cd ~/www/your-site/public_html/wp-content/themes/my-theme
+  git pull origin main
+  # If not committing compiled CSS:
+  # npm install && npm run build
+REMOTE</code></pre>
+
+  <h4>Caching: SG Optimizer</h4>
+  <p>Install and activate the SG Optimizer plugin (pre-installed on SiteGround). Under Dynamic Caching, ensure it is enabled. If you see stale content after deploying, flush the cache via the "Purge SG Cache" button in the WordPress admin bar, or via WP-CLI: <code>wp sg purge</code>.</p>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="deploy-wpengine">Deploying to WP Engine</h3>
+  <h4>Git push-to-deploy</h4>
+  <p>WP Engine's best feature for this stack. Once configured, deploying your theme is a single Git push. Here is the exact workflow from a production deployment.</p>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <p><strong>Generate an SSH key</strong> (if you do not have one) and add it to WP Engine. In the WP Engine dashboard, go to your profile > SSH Keys. Add your public key. Note the username WP Engine assigns.</p>
+      <pre><code class="language-bash"># Generate an ed25519 key if needed
+ssh-keygen -t ed25519 -C "you@example.com"
+
+# Copy the public key to paste into WP Engine dashboard
+cat ~/.ssh/id_ed25519.pub</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <p><strong>Set up two Git remotes:</strong> one for GitHub (source of truth), one for WP Engine (deployment target):</p>
+      <pre><code class="language-bash"># GitHub (your backup and collaboration remote)
+git remote add origin git@github.com:your-org/your-theme.git
+
+# WP Engine production
+git remote add production git@git.wpengine.com:production/your-install.git</code></pre>
+      <p>If you have a dev/staging environment on WP Engine, add that as a separate remote too.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <p><strong>Build before pushing.</strong> WP Engine has no build step and no Node.js or Composer on the server. Whatever you push is what gets deployed. Compiled assets and the <code>vendor/</code> directory must be committed:</p>
+      <pre><code class="language-bash"># Build production CSS
+npm run build
+
+# Commit the compiled output and Composer packages
+git add assets/css/app.css vendor/
+git commit -m "Build production assets"</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <p><strong>The deploy workflow:</strong></p>
+      <pre><code class="language-bash"># 1. Push to GitHub first (backup)
+git push origin main
+
+# 2. Create a backup in WP Engine dashboard (safety net)
+
+# 3. Deploy to WP Engine
+git push production main</code></pre>
+      <p>WP Engine receives the push, deploys the files, and automatically purges its Varnish and CDN caches. The site updates within seconds.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">WP Engine GitPush gotchas</div>
+    <p><strong>First push requires --force.</strong> WP Engine's GitPush repo is initialized with its own commit history that diverges from yours. Your first push to a new WP Engine remote will be rejected. Use <code>git push production main --force</code> for the initial deployment only. After that, normal pushes work fine.</p>
+    <p><strong>GitPush is additive.</strong> Files pushed to WP Engine persist on the server forever. Removing a file from your repo and pushing does not delete it from the server. If you need to neutralize a file, replace its contents with a 404 stub and push that: <code>&lt;?php header("HTTP/1.0 404 Not Found"); exit;</code></p>
+    <p><strong>Vendor directory must be committed.</strong> There is no Composer on WP Engine's servers. Your <code>vendor/</code> directory (containing Timber) must be committed to the repo and pushed. Same for compiled CSS/JS.</p>
+    <p><strong>HTTPS images with Timber.</strong> WP Engine terminates SSL at the load balancer, so <code>wp_upload_dir()</code> may return HTTP URLs. Timber's <code>ImageHelper</code> calls <code>wp_upload_dir()['baseurl']</code> directly, bypassing standard attachment URL filters. You must add a filter on <code>upload_dir</code> that forces HTTPS on the <code>baseurl</code> key.</p>
+  </div>
+
+  <p><strong>WP Engine + LocalWP Connect:</strong> If you use both WP Engine and LocalWP, the Connect feature lets you push and pull your database and files between environments with a few clicks. This is the fastest way to sync content during development. A useful pattern: create two local sites in LocalWP. One is your development site (where you write code). The other is a production clone (pulled via Connect with real content and media). Symlink the theme directory from your dev site into the production clone, so you can QA code changes against real production data without deploying. After pulling a site from WP Engine, there is no admin password (WP Engine uses SSO). Reset via WP-CLI in LocalWP's Site Shell: <code>wp user update 1 --user_pass=localpassword</code>.</p>
+
+  <h4>EverCache</h4>
+  <p>WP Engine's caching layer runs at the server level. You do not need to install a caching plugin. Pages are cached automatically. Cache is cleared when you publish or update content, and automatically on every GitPush deploy. If you need to manually clear cache, use the "Clear All Caches" button in the WP Engine plugin (auto-installed on all WP Engine sites) or via the dashboard.</p>
+
+  <div class="sub-divider"></div>
+
+  <h3 id="deploy-cloudways">Deploying to Cloudways</h3>
+
+  <h4>Server setup</h4>
+  <p>In the Cloudways dashboard, launch a new application. Choose <strong>DigitalOcean</strong> as the infrastructure provider (best balance of cost and performance for WordPress). A 1GB RAM server is sufficient for most small-to-medium sites. Select a server region close to your primary audience.</p>
+  <p>Choose "WordPress" as the application type. Cloudways will provision the server, install WordPress, and configure Nginx + PHP automatically. This takes about 5 minutes.</p>
+  <p>Once provisioned, note two things from the dashboard: your <strong>server IP address</strong> (you will need this for DNS) and your <strong>application folder name</strong> (a random string like <code>wanjgbpphe</code>, used in SSH paths).</p>
+
+  <h4>SSH and SFTP access</h4>
+  <p>Add your SSH public key in the Cloudways dashboard under Server Management > SSH Keys. Your SSH connection will use the server's master credentials. The WordPress application root lives at:</p>
+  <pre><code class="language-bash">/home/master/applications/YOUR_APP_ID/public_html/</code></pre>
+  <p>Your theme goes in <code>.../public_html/wp-content/themes/your-theme/</code>.</p>
+
+  <h4>Deploying with a deploy script (recommended)</h4>
+  <p>For repeatable, reliable deploys, use an rsync-based deploy script. This is what we use in production:</p>
+  <div class="code-label">deploy.sh — Cloudways rsync</div>
+  <pre><code class="language-bash">#!/bin/bash
+# deploy.sh — run from your theme directory
+
+TARGET=$1  # "staging" or "production"
+
+# Build production CSS
+npm run build
+
+# Set the correct Cloudways app path
+if [ "$TARGET" = "production" ]; then
+  APP_PATH="/home/master/applications/YOUR_PROD_APP/public_html"
+  echo "Deploying to PRODUCTION. Type 'yes' to confirm:"
+  read confirm
+  [ "$confirm" != "yes" ] && exit 1
+elif [ "$TARGET" = "staging" ]; then
+  APP_PATH="/home/master/applications/YOUR_STAGING_APP/public_html"
+else
+  echo "Usage: ./deploy.sh [staging|production]"
+  exit 1
+fi
+
+THEME_PATH="$APP_PATH/wp-content/themes/your-theme"
+SSH_HOST="master@YOUR_SERVER_IP"
+
+# Sync theme files (note: NOT rsync -a, see gotcha below)
+rsync -rltz --delete --omit-dir-times --no-perms \
+  --exclude 'node_modules' \
+  --exclude '.git' \
+  --exclude 'migration' \
+  --exclude '.env' \
+  ./ "$SSH_HOST:$THEME_PATH/"
+
+# Flush caches on the server
+ssh "$SSH_HOST" "cd $APP_PATH && \
+  wp cache flush && \
+  rm -rf wp-content/cache/breeze/*"
+
+echo "Deployed to $TARGET."</code></pre>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">Cloudways gotchas</div>
+    <p><strong>Do not use <code>rsync -a</code></strong> (archive mode). The Cloudways SSH user does not own the application directories, so archive mode fails with "failed to set permissions/times" errors on every directory. Use <code>-rltz --omit-dir-times --no-perms</code> instead. This preserves the file content and timestamps while skipping the permission operations that Cloudways blocks.</p>
+    <p><strong>SCP/SFTP chroot.</strong> If you use SCP to upload files (like a database dump), Cloudways puts them in <code>~/tmp/</code>, not <code>/tmp/</code>. WP-CLI and other tools look in <code>/tmp/</code>. After uploading via SCP, SSH in and copy the file: <code>cp ~/tmp/your-file /tmp/your-file</code>.</p>
+  </div>
+
+  <h4>Staging workflow</h4>
+  <p>Cloudways supports cloning your application to create a staging environment on the same server. The staging app gets its own random folder name and its own URL (a <code>*.cloudwaysapps.com</code> subdomain). Your deploy script handles both targets by switching the app path based on the argument.</p>
+  <p>The workflow: deploy to staging first, verify in the browser, then deploy to production. The deploy script requires typing "yes" for production deploys to prevent accidental pushes.</p>
+
+  <h4>Caching: Breeze + Varnish</h4>
+  <p>Cloudways runs a Varnish cache in front of Nginx. The Breeze plugin (Cloudways' caching plugin) manages cache rules from the WordPress admin. Install and activate Breeze, then configure:</p>
+  <ul>
+    <li><strong>Basic Options:</strong> Enable HTML, CSS, and JS minification. Enable Gzip compression.</li>
+    <li><strong>Varnish:</strong> Enable Varnish auto-purge (clears Varnish cache when content is updated in WordPress).</li>
+    <li><strong>CDN:</strong> Optional. If you add Cloudflare or another CDN, configure the CDN URL here.</li>
+  </ul>
+  <p>After every deploy, flush caches at all layers. The deploy script handles this with <code>wp cache flush</code> and clearing the Breeze cache directory. If content still appears stale, purge Varnish from the Cloudways dashboard under Application Management > Varnish.</p>
+
+  <h4>SSL</h4>
+  <p>In the Cloudways dashboard, go to Application Management > SSL Certificate. Install a free Let's Encrypt certificate. Cloudways handles renewal automatically. Make sure your DNS A records are pointing to the Cloudways server IP before requesting the certificate, as Let's Encrypt validates domain ownership via HTTP.</p>
+</section>
+
+<!-- ============================== -->
+<!-- SECTION 10: CLAUDE CODE        -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section" id="claude-code">
+  <h2>Working with Claude Code</h2>
+  <p>This is the section that makes the rest of the guide practical for non-developers. Claude Code is the tool that closes the gap between "I understand what this theme does" and "I can build and maintain it myself."</p>
+
+  <h3 id="context-pattern">The Context File Pattern</h3>
+  <p>Claude Code works across sessions, but it does not remember previous sessions automatically. The context file pattern solves this. You maintain a <code>context.md</code> (or <code>MEMORY.md</code>) file in your project that tells Claude Code everything it needs to know:</p>
+
+  <pre><code class="language-markdown"># Project Context — My Theme
+
+## What this is
+Custom WordPress theme for mysite.com, built with Timber + Twig + Tailwind CSS.
+
+## Tech stack
+- Timber 2.3.3 via Composer
+- Tailwind 3.4 via CLI (no Vite/webpack)
+- Lazy Blocks for custom Gutenberg blocks
+- LocalWP for development (localhost:10007)
+
+## File locations
+- Theme: ~/Local Sites/mysite/app/public/wp-content/themes/my-theme/
+- Templates: templates/*.twig
+- Block templates: templates/blocks/*.twig
+- Block PHP shims: blocks/lazyblock-*/block.php
+- Tailwind source: src/css/app.css
+- Tailwind output: assets/css/app.css
+
+## Conventions
+- All blocks use theme_block_render() helper
+- Lazy Block control names use underscores (not hyphens)
+- Tailwind classes only — no custom CSS
+- Content pulled from options[] (admin settings) with fallback defaults
+
+## Current status
+- Homepage: complete
+- Services page: complete
+- Contact page: in progress — form styling not done
+- Blog archive: not started
+
+## What to work on next
+- Style the Contact Form 7 output in page-contact.twig
+- Build the blog archive template</code></pre>
+
+  <p>Start every Claude Code session by pointing it to this file: <em>"Read context.md and let me know what you see."</em> This gives Claude Code full project awareness in seconds. Update the file at the end of each session. This is the single most important workflow pattern for using Claude Code effectively across sessions. Without it, you spend the first 10 minutes of every session re-explaining the project. With it, Claude Code picks up exactly where you left off. Include exact file paths. Include what is done and what is not done. Include any quirks or conventions Claude Code should follow.</p>
+
+  <h3 id="prompting">Effective Prompting for This Stack</h3>
+  <p><strong>Scaffolding a new template:</strong></p>
+  <p><em>"Create a new page template for the About page. Follow the same pattern as page-services.twig: a PHP dispatcher and a Twig template that extends base.twig. The page has a hero section with a brown background, a content section with white background, and a CTA section matching the one on the homepage."</em></p>
+
+  <p><strong>Asking for Tailwind classes (describe the layout, not the class):</strong></p>
+  <p><em>"I need a two-column section: left side has a heading and paragraph, right side has an image. On mobile it should stack with the text on top. The section should have generous padding and the text column should be slightly wider than the image column."</em></p>
+
+  <p><strong>Debugging Twig:</strong></p>
+  <p><em>"The nav links are not rendering. Here is the error I see in the browser: [paste error]. Read nav.twig and functions.php and tell me what is wrong."</em></p>
+
+  <p><strong>Understanding code:</strong></p>
+  <p><em>"Explain what theme_block_render() does. I want to understand the flow from the Gutenberg editor to the rendered HTML."</em></p>
+
+  <h3 id="session-workflow">Session Workflow Patterns</h3>
+  <p><strong>Starting a session:</strong> <em>"Read context.md. I want to build the blog archive page today."</em></p>
+  <p><strong>Ending a session:</strong> <em>"Update context.md with what we did today and what is left to do."</em></p>
+  <p><strong>After any template change:</strong> Make sure <code>npm run dev</code> is running. If Claude Code makes changes but the site does not reflect them, the build is not running.</p>
+  <p><strong>Visual QA:</strong> Claude Code can take screenshots and compare them. <em>"Take a screenshot of the local homepage and compare it to the live site. Flag any differences."</em></p>
+  <p><strong>Browser tab state matters.</strong> If you are using Claude Code's browser capabilities, note which tabs are open at the end of each session. Tab IDs change between sessions, so Claude Code needs to re-orient.</p>
+
+  <h3>The Companion Files: What to Give Claude Code</h3>
+  <p>This guide is written for you, the human. It explains the reasoning behind every decision and walks you through each step with context. But Claude Code needs something different: structured, concise files that tell it exactly what to do, where files go, and what conventions to follow.</p>
+  <p>This guide ships with two companion Markdown files designed specifically for Claude Code:</p>
+
+  <h4>CLAUDE.md — Your project context file</h4>
+  <p>This is a template you customize for your project and place in the root of your theme directory. It contains your tech stack, file locations, conventions, design system, current project status, and what to work on next. It is the single file that makes Claude Code effective across sessions.</p>
+  <p><strong>How to use it:</strong></p>
+  <ul>
+    <li>Download <code>CLAUDE.md</code> from this guide's companion files</li>
+    <li>Fill in every bracketed placeholder with your project's details</li>
+    <li>Place it in the root of your theme directory</li>
+    <li>Start every Claude Code session with: <em>"Read CLAUDE.md"</em></li>
+    <li>End every session with: <em>"Update the Current Status and Next Session sections in CLAUDE.md"</em></li>
+  </ul>
+  <p>Do not skip customizing this file. A generic CLAUDE.md is marginally useful. A CLAUDE.md with your exact color hex codes, your specific file paths, your current status, and your known gotchas is the difference between Claude Code being a helpful assistant and Claude Code being an effective co-pilot.</p>
+
+  <h4>theme-scaffold.md — The executable reference</h4>
+  <p>This file contains the complete setup sequence and every code pattern Claude Code needs to build a Timber + Twig + Tailwind theme. It is not a guide for humans. It is optimized for Claude Code: minimal explanation, maximum actionable code, structured as a reference document.</p>
+  <p><strong>How to use it:</strong></p>
+  <ul>
+    <li>When starting a new theme, give it to Claude Code: <em>"Read theme-scaffold.md. I want to set up a new Timber + Twig + Tailwind theme for [my site]. Walk me through the setup."</em></li>
+    <li>Claude Code will follow the setup sequence in the file, customizing each step for your project</li>
+    <li>Once the theme is scaffolded, Claude Code references the patterns in the file when building new templates and blocks</li>
+    <li>You do not need to give it to Claude Code every session. After initial setup, CLAUDE.md is enough for ongoing work. Point Claude Code back to theme-scaffold.md when you are adding a fundamentally new pattern (first block, first custom post type, first deployment)</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">The two-file workflow</div>
+    <p><strong>First session (new project):</strong> <em>"Read theme-scaffold.md and CLAUDE.md. Let's set up this theme from scratch."</em></p>
+    <p><strong>Every session after that:</strong> <em>"Read CLAUDE.md. Here is what I want to work on today."</em></p>
+    <p><strong>When hitting a new pattern:</strong> <em>"Read theme-scaffold.md section 4 (Block Patterns). I want to add a Lazy Block for a testimonial section."</em></p>
+  </div>
+</section>
+
+<!-- ============================== -->
+<!-- APPENDICES                     -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section section-cream" id="appendices">
+  <h2>Appendices</h2>
+
+  <h3 id="appendix-gitignore">A. Complete .gitignore Template</h3>
+  <pre><code class="language-bash"># Dependencies
+node_modules/
+vendor/
+
+# Build artifacts (uncomment if you build on deploy)
+# assets/css/app.css
+
+# Environment
+.env
+wp-config-local.php
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# WordPress (if using full-site repo)
+# wp-content/uploads/
+# wp-content/plugins/
+# wp-content/upgrade/</code></pre>
+
+  <h3 id="appendix-prelaunch">B. Pre-Launch Checklist</h3>
+  <table>
+    <thead><tr><th>Category</th><th>Task</th></tr></thead>
+    <tbody>
+      <tr><td>Build</td><td>Run <code>npm run build</code> for production CSS</td></tr>
+      <tr><td>Build</td><td>Run <code>composer install --no-dev</code></td></tr>
+      <tr><td>Build</td><td>Verify all pages render correctly with production CSS</td></tr>
+      <tr><td>Content</td><td>All pages reviewed and approved</td></tr>
+      <tr><td>Content</td><td>All images are correct resolution (no placeholders)</td></tr>
+      <tr><td>Content</td><td>Contact form tested and receiving submissions</td></tr>
+      <tr><td>SEO</td><td>SEO plugin installed and configured (Yoast or Rank Math)</td></tr>
+      <tr><td>SEO</td><td>Title tags and meta descriptions set for all pages</td></tr>
+      <tr><td>SEO</td><td>Sitemap generated and submitted to Google Search Console</td></tr>
+      <tr><td>SEO</td><td>Redirects in place for any changed URLs</td></tr>
+      <tr><td>SEO</td><td>Canonical tags verified</td></tr>
+      <tr><td>Performance</td><td>Run PageSpeed Insights, address critical issues</td></tr>
+      <tr><td>Performance</td><td>Host caching layer configured</td></tr>
+      <tr><td>Performance</td><td>Image optimization plugin active</td></tr>
+      <tr><td>Security</td><td>SSL certificate active and working</td></tr>
+      <tr><td>Security</td><td>WordPress, plugins, and PHP updated to latest</td></tr>
+      <tr><td>Security</td><td>Remove unused themes and plugins</td></tr>
+      <tr><td>Deploy</td><td>Database URL search-replace completed</td></tr>
+      <tr><td>Deploy</td><td>Uploads/media migrated</td></tr>
+      <tr><td>Deploy</td><td>Test on staging before going live</td></tr>
+      <tr><td>Post-launch</td><td>Verify all pages on live domain</td></tr>
+      <tr><td>Post-launch</td><td>Flush all caches</td></tr>
+      <tr><td>Post-launch</td><td>Monitor error logs for 24 hours</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="appendix-troubleshooting">C. Troubleshooting Common Errors</h3>
+
+  <h4>"Timber not found" / white screen after theme activation</h4>
+  <p>Composer dependencies are not installed. SSH into your server (or open the terminal in your local site) and run <code>composer install</code> from the theme directory. If Composer is not installed on your server, upload the <code>vendor/</code> directory via SFTP.</p>
+
+  <h4>Tailwind classes not applying</h4>
+  <p>Three possible causes: (1) <code>npm run dev</code> is not running, so the CSS has not been recompiled; (2) the file containing the class is not listed in <code>tailwind.config.js</code>'s <code>content</code> array; (3) the compiled CSS file is cached by the browser or host. Run <code>npm run build</code>, hard-refresh the browser, and flush the host cache.</p>
+
+  <h4>Twig template not rendering / wrong template loading</h4>
+  <p>WordPress template hierarchy determines which PHP file loads. Check that your PHP file name matches WordPress conventions (<code>front-page.php</code>, <code>page-contact.php</code>, <code>single.php</code>). Then verify the PHP file calls <code>Timber::render()</code> with the correct Twig template path. Check that the Twig file exists in your <code>templates/</code> directory.</p>
+
+  <h4>ACF fields not showing in Twig</h4>
+  <p>If <code>{{ post.meta('field_name') }}</code> returns nothing: verify the field name in the ACF admin (it is the "Field Name," not the "Field Label"). Verify the field group is assigned to the correct post type or page template. Verify the post actually has a value saved for that field.</p>
+
+  <h4>Lazy Blocks not rendering on the frontend</h4>
+  <p>Check: (1) the block output mode is set to "Theme Template" in the Lazy Blocks editor; (2) the <code>block.php</code> shim exists at <code>blocks/lazyblock-{slug}/block.php</code>; (3) the slug in the Lazy Blocks editor matches the directory name exactly; (4) the Twig template exists at <code>templates/blocks/{template-name}.twig</code>.</p>
+
+  <h4>Database URLs not updated after migration</h4>
+  <p>Images broken, links pointing to localhost, CSS/JS not loading: these all point to URLs that were not search-replaced during migration. Run <code>wp search-replace 'old-url' 'new-url' --dry-run</code> to verify, then run without <code>--dry-run</code>. Flush all caches after.</p>
+
+  <h4>Cache serving stale content after deploy</h4>
+  <p>Clear caches at every layer: browser (hard refresh), WordPress object cache (<code>wp cache flush</code>), and host cache (SG Optimizer purge / WP Engine dashboard / Cloudways Varnish purge). If content is still stale, check that your CSS file version string changed (the <code>$version</code> parameter in <code>wp_enqueue_style</code>).</p>
+
+  <h4>Images serving over HTTP on WP Engine (mixed content warnings)</h4>
+  <p>WP Engine terminates SSL at the load balancer, so <code>wp_upload_dir()</code> returns HTTP URLs. Timber uses <code>wp_upload_dir()['baseurl']</code> directly, bypassing standard attachment URL filters. Add a filter on <code>upload_dir</code> in <code>functions.php</code> that replaces <code>http://</code> with <code>https://</code> in the <code>baseurl</code> key.</p>
+
+  <h4>npm run build hangs indefinitely (webpack)</h4>
+  <p>If your theme uses webpack instead of the Tailwind CLI, check for <code>watch: true</code> or <code>watch: !process.env.CI</code> in <code>webpack.config.js</code>. This causes the build to run as a watcher instead of exiting after compilation. Fix: <code>CI=true npx webpack --config webpack.config.js --mode=production</code>.</p>
+
+  <h4>Custom post type archive pagination returns 404</h4>
+  <p>If a CPT's rewrite slug conflicts with a static page slug, WordPress may match the CPT rewrite rule before the pagination rule, causing <code>/your-cpt/page/2/</code> to look for a post named "page" and return 404. Fix: add a higher-priority <code>add_rewrite_rule()</code> in <code>functions.php</code> that handles the pagination pattern before the CPT rule fires. Flush rewrite rules after.</p>
+
+  <h4>WP Engine GitPush rejected on first push</h4>
+  <p>WP Engine's GitPush repo has its own initial commit. Your first push will be rejected because the histories diverge. Use <code>git push production main --force</code> for the initial push only. This is expected and documented by WP Engine.</p>
+</section>
+
+<!-- FOOTER -->
+<footer style="background: var(--brown-500); color: var(--blue-400); padding: 3rem; text-align: center; font-size: 0.8rem;">
+  <div style="font-family: var(--font-display); color: var(--blue-300); font-size: 1.2rem; margin-bottom: 0.5rem;">acornCMO</div>
+  <p>From seed to scale.</p>
+  <p style="margin-top: 1rem;">&copy; 2026 acornCMO. Built with Timber, Twig, Tailwind, and Claude Code.</p>
+</footer>
+
+</div><!-- .main-content -->
+</div><!-- .site-wrap -->
+
+<button class="back-to-top" onclick="window.scrollTo({top:0})" aria-label="Back to top">&uarr;</button>
+
+<!-- Prism.js for syntax highlighting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-twig.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
+
+<script>
+// Back to top button visibility
+window.addEventListener('scroll', function() {
+  const btn = document.querySelector('.back-to-top');
+  btn.classList.toggle('visible', window.scrollY > 600);
+});
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('.sidebar nav a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// Active nav highlighting on scroll
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.sidebar nav a:not(.nav-section)');
+window.addEventListener('scroll', function() {
+  let current = '';
+  sections.forEach(function(section) {
+    if (window.scrollY >= section.offsetTop - 120) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}, { passive: true });
+
+// Reading progress bar
+window.addEventListener('scroll', function() {
+  var el = document.getElementById('reading-progress');
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  if (h > 0) {
+    el.style.width = (window.scrollY / h * 100) + '%';
+  }
+}, { passive: true });
+</script>
+
+</body>
+</html>

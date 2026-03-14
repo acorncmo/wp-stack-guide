@@ -1,0 +1,30 @@
+{# archive.twig -- Blog archive / post listing #}
+{% extends 'base.twig' %}
+
+{% block content %}
+  <section class="py-16 px-6 max-w-5xl mx-auto">
+    <h1 class="font-display text-3xl mb-12">Blog</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for post in posts %}
+        <article class="border border-brand-light rounded-xl overflow-hidden">
+          {% if post.thumbnail %}
+            <img src="{{ post.thumbnail.src('medium_large') }}"
+                 alt="{{ post.title }}"
+                 class="w-full h-48 object-cover">
+          {% endif %}
+          <div class="p-6">
+            <h2 class="font-sans font-bold text-xl mb-2">
+              <a href="{{ post.link }}" class="hover:text-brand-accent">
+                {{ post.title }}
+              </a>
+            </h2>
+            <p class="text-sm text-brand-muted">
+              {{ post.preview.length(25).read_more('') }}
+            </p>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

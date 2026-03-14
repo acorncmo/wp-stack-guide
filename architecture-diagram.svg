@@ -1,0 +1,297 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 880" font-family="'Public Sans', system-ui, sans-serif">
+  <defs>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#250F04" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr-brown" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 1 L 10 6 L 0 11 z" fill="#250F04"/>
+    </marker>
+    <marker id="arr-olive" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 1 L 10 6 L 0 11 z" fill="#47470E"/>
+    </marker>
+    <marker id="arr-blue" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 1 L 10 6 L 0 11 z" fill="#25495C"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="880" fill="#FFFFFF" rx="12"/>
+
+  <!-- Title -->
+  <text x="600" y="38" text-anchor="middle" font-size="22" font-weight="800" fill="#250F04" letter-spacing="-0.02em">WordPress Development Architecture</text>
+  <text x="600" y="60" text-anchor="middle" font-size="13" fill="#735950" letter-spacing="0.06em">LOCAL  ·  GITHUB  ·  HOST  ·  AND HOW THEY CONNECT</text>
+
+  <!-- ======================== -->
+  <!-- DEV WORKFLOW LOOP (top)  -->
+  <!-- ======================== -->
+  <rect x="30" y="78" width="1140" height="52" rx="8" fill="#F5F2E3" stroke="#E5DEB8" stroke-width="1.5"/>
+  <text x="600" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#5C594A" letter-spacing="0.04em">YOUR DAILY WORKFLOW</text>
+  <text x="600" y="118" text-anchor="middle" font-size="11" fill="#735950">
+    Edit locally  →  Preview in browser  →  Commit to Git  →  Push to GitHub  →  Deploy to host  →  Verify live
+  </text>
+
+
+  <!-- ====================================================== -->
+  <!-- COLUMN 1: LOCAL ENVIRONMENT (30 - 345)                  -->
+  <!-- ====================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="150" width="315" height="540" rx="10" fill="#250F04"/>
+    <rect x="30" y="150" width="315" height="48" rx="10" fill="#250F04"/>
+    <rect x="30" y="188" width="315" height="2" fill="#3F1906"/>
+  </g>
+  <text x="188" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#B8D6E5" letter-spacing="0.04em">YOUR COMPUTER</text>
+
+  <!-- LocalWP box -->
+  <rect x="46" y="206" width="283" height="38" rx="6" fill="#3F1906"/>
+  <text x="188" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#B2B224">LocalWP</text>
+  <text x="188" y="236" text-anchor="middle" font-size="9" fill="#A09B81">Manages PHP, MySQL, Nginx, SSL locally</text>
+
+  <!-- WordPress Install -->
+  <rect x="46" y="254" width="283" height="28" rx="6" fill="#59301B"/>
+  <text x="188" y="273" text-anchor="middle" font-size="11" font-weight="600" fill="#E5DEB8">WordPress Core Install</text>
+
+  <!-- wp-content -->
+  <rect x="46" y="292" width="283" height="20" rx="4" fill="#735950"/>
+  <text x="188" y="306" text-anchor="middle" font-size="10" font-weight="600" fill="#E3EFF5">wp-content/</text>
+
+  <!-- Theme dir (highlighted) -->
+  <rect x="54" y="322" width="267" height="180" rx="8" fill="#B8D6E5" stroke="#25495C" stroke-width="2"/>
+  <text x="188" y="342" text-anchor="middle" font-size="13" font-weight="700" fill="#250F04">themes/my-theme/</text>
+  <text x="188" y="357" text-anchor="middle" font-size="9" font-weight="600" fill="#25495C">THIS IS WHAT YOU BUILD &amp; VERSION CONTROL</text>
+
+  <g font-size="9.5" fill="#250F04">
+    <text x="72" y="378"><tspan font-weight="600">templates/</tspan>  .twig files (HTML + Tailwind)</text>
+    <text x="72" y="393"><tspan font-weight="600">blocks/</tspan>  Block PHP shims + Twig</text>
+    <text x="72" y="408"><tspan font-weight="600">assets/css/</tspan>  Compiled Tailwind output</text>
+    <text x="72" y="423"><tspan font-weight="600">src/css/</tspan>  Tailwind source directives</text>
+    <text x="72" y="438"><tspan font-weight="600">functions.php</tspan>  Timber init, menus</text>
+    <text x="72" y="453"><tspan font-weight="600">tailwind.config.js</tspan>  Design tokens</text>
+    <text x="72" y="468"><tspan font-weight="600">composer.json</tspan>  Timber dependency</text>
+    <text x="72" y="483"><tspan font-weight="600">CLAUDE.md</tspan>  Project context for AI</text>
+  </g>
+
+  <!-- Plugins + Uploads -->
+  <rect x="54" y="512" width="128" height="28" rx="6" fill="#EDE8CD"/>
+  <text x="118" y="530" text-anchor="middle" font-size="10" font-weight="600" fill="#5C594A">plugins/</text>
+  <rect x="193" y="512" width="128" height="28" rx="6" fill="#EDE8CD"/>
+  <text x="257" y="530" text-anchor="middle" font-size="10" font-weight="600" fill="#5C594A">uploads/</text>
+
+  <!-- Database -->
+  <rect x="46" y="552" width="283" height="42" rx="6" fill="#59301B"/>
+  <rect x="58" y="560" width="18" height="18" rx="4" fill="#A09B81"/>
+  <text x="67" y="573" text-anchor="middle" font-size="8" font-weight="700" fill="#59301B">DB</text>
+  <text x="86" y="570" font-size="11" font-weight="600" fill="#E5DEB8">MySQL Database</text>
+  <text x="86" y="586" font-size="9" fill="#E5C7B8">Posts, pages, options, ACF fields</text>
+
+  <!-- Dev tools -->
+  <rect x="46" y="606" width="135" height="36" rx="6" fill="#3F1906"/>
+  <text x="114" y="623" text-anchor="middle" font-size="10" font-weight="600" fill="#B2B224">npm run dev</text>
+  <text x="114" y="636" text-anchor="middle" font-size="8" fill="#A09B81">Tailwind watcher</text>
+  <rect x="194" y="606" width="135" height="36" rx="6" fill="#3F1906"/>
+  <text x="262" y="623" text-anchor="middle" font-size="10" font-weight="600" fill="#B2B224">Claude Code</text>
+  <text x="262" y="636" text-anchor="middle" font-size="8" fill="#A09B81">AI co-pilot in terminal</text>
+
+  <text x="188" y="672" text-anchor="middle" font-size="8" fill="#735950">~/Local Sites/my-site/app/public/</text>
+
+
+  <!-- ====================================================== -->
+  <!-- ARROW ZONE 1: LOCAL → GITHUB  (345 - 440)              -->
+  <!-- ====================================================== -->
+
+  <!-- Main flow arrow: thick, clear, horizontal -->
+  <line x1="345" y1="410" x2="435" y2="410" stroke="#250F04" stroke-width="3" marker-end="url(#arr-brown)"/>
+
+  <!-- Label box centered on the arrow -->
+  <rect x="352" y="370" width="76" height="34" rx="6" fill="#250F04"/>
+  <text x="390" y="386" text-anchor="middle" font-size="9" font-weight="700" fill="#B8D6E5" letter-spacing="0.03em">git push</text>
+  <text x="390" y="398" text-anchor="middle" font-size="8" fill="#7090A0">theme only</text>
+
+
+  <!-- ====================================================== -->
+  <!-- COLUMN 2: GITHUB  (440 - 755)                           -->
+  <!-- ====================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="440" y="150" width="315" height="540" rx="10" fill="#FFFFFF" stroke="#250F04" stroke-width="2"/>
+  </g>
+  <rect x="440" y="150" width="315" height="48" rx="10" fill="#F5F2E3" stroke="#250F04" stroke-width="2"/>
+  <text x="598" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#250F04" letter-spacing="0.04em">GITHUB</text>
+
+  <!-- What's tracked -->
+  <text x="458" y="218" font-size="11" font-weight="700" fill="#250F04">Theme repo (what's tracked)</text>
+  <g font-size="10" fill="#59301B">
+    <text x="468" y="236">✓  templates/*.twig</text>
+    <text x="468" y="253">✓  blocks/</text>
+    <text x="468" y="270">✓  functions.php</text>
+    <text x="468" y="287">✓  tailwind.config.js</text>
+    <text x="468" y="304">✓  package.json + composer.json</text>
+    <text x="468" y="321">✓  assets/css/app.css (compiled)</text>
+    <text x="468" y="338">✓  inc/ (blocks, settings, ACF)</text>
+    <text x="468" y="355">✓  CLAUDE.md (project context)</text>
+  </g>
+
+  <rect x="458" y="368" width="280" height="1" fill="#EDE8CD"/>
+
+  <text x="458" y="390" font-size="11" font-weight="700" fill="#735950">Not tracked (.gitignore)</text>
+  <g font-size="10" fill="#A09B81">
+    <text x="468" y="408">✗  node_modules/</text>
+    <text x="468" y="425">✗  vendor/ (Composer)</text>
+    <text x="468" y="442">✗  .env, wp-config, .DS_Store</text>
+  </g>
+
+  <rect x="458" y="456" width="280" height="1" fill="#EDE8CD"/>
+
+  <!-- Key insight -->
+  <rect x="458" y="468" width="280" height="44" rx="6" fill="#E3EFF5"/>
+  <text x="598" y="486" text-anchor="middle" font-size="10" font-weight="700" fill="#25495C">KEY INSIGHT</text>
+  <text x="598" y="502" text-anchor="middle" font-size="10" fill="#25495C">Only your theme flows through Git.</text>
+
+  <!-- Deploy methods reference (inside GitHub column, lower area) -->
+  <rect x="458" y="524" width="280" height="150" rx="8" fill="#F5F2E3"/>
+  <text x="598" y="546" text-anchor="middle" font-size="11" font-weight="700" fill="#250F04">HOW TO DEPLOY (pick your host)</text>
+
+  <rect x="474" y="558" width="248" height="32" rx="6" fill="#FFFFFF" stroke="#E5DEB8" stroke-width="1"/>
+  <text x="486" y="579" font-size="10" fill="#59301B"><tspan font-weight="700" fill="#250F04">SiteGround</tspan>   SFTP upload or SSH pull script</text>
+
+  <rect x="474" y="596" width="248" height="32" rx="6" fill="#FFFFFF" stroke="#E5DEB8" stroke-width="1"/>
+  <text x="486" y="617" font-size="10" fill="#59301B"><tspan font-weight="700" fill="#250F04">WP Engine</tspan>   git push production main</text>
+
+  <rect x="474" y="634" width="248" height="32" rx="6" fill="#FFFFFF" stroke="#E5DEB8" stroke-width="1"/>
+  <text x="486" y="655" font-size="10" fill="#59301B"><tspan font-weight="700" fill="#250F04">Cloudways</tspan>   rsync via deploy.sh</text>
+
+
+  <!-- ====================================================== -->
+  <!-- ARROW ZONE 2: GITHUB → HOST  (755 - 855)               -->
+  <!-- ====================================================== -->
+
+  <!-- Main flow arrow: thick olive, horizontal, aligned with theme boxes -->
+  <line x1="755" y1="450" x2="850" y2="450" stroke="#47470E" stroke-width="3" marker-end="url(#arr-olive)"/>
+
+  <!-- Label box centered on the arrow -->
+  <rect x="762" y="410" width="76" height="34" rx="6" fill="#47470E"/>
+  <text x="800" y="426" text-anchor="middle" font-size="9" font-weight="700" fill="#E0E0A7" letter-spacing="0.03em">deploy</text>
+  <text x="800" y="438" text-anchor="middle" font-size="8" fill="#C9C966">theme files</text>
+
+
+  <!-- ====================================================== -->
+  <!-- COLUMN 3: PRODUCTION HOST  (855 - 1170)                 -->
+  <!-- ====================================================== -->
+  <g filter="url(#shadow)">
+    <rect x="855" y="150" width="315" height="540" rx="10" fill="#25495C"/>
+    <rect x="855" y="150" width="315" height="48" rx="10" fill="#25495C"/>
+    <rect x="855" y="188" width="315" height="2" fill="#7090A0"/>
+  </g>
+  <text x="1013" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#B8D6E5" letter-spacing="0.04em">PRODUCTION HOST</text>
+
+  <!-- Host option pills -->
+  <rect x="870" y="202" width="84" height="24" rx="12" fill="#B8D6E5"/>
+  <text x="912" y="218" text-anchor="middle" font-size="9" font-weight="700" fill="#25495C">SiteGround</text>
+  <rect x="962" y="202" width="84" height="24" rx="12" fill="#B8D6E5"/>
+  <text x="1004" y="218" text-anchor="middle" font-size="9" font-weight="700" fill="#25495C">WP Engine</text>
+  <rect x="1054" y="202" width="84" height="24" rx="12" fill="#B8D6E5"/>
+  <text x="1096" y="218" text-anchor="middle" font-size="9" font-weight="700" fill="#25495C">Cloudways</text>
+
+  <!-- Server stack -->
+  <rect x="870" y="238" width="284" height="32" rx="6" fill="#7090A0"/>
+  <text x="1012" y="256" text-anchor="middle" font-size="10" font-weight="600" fill="#FFFFFF">Server: PHP 8.1+ / MySQL / Nginx</text>
+  <text x="1012" y="268" text-anchor="middle" font-size="8" fill="#CDE2ED">Managed by host</text>
+
+  <!-- Caching -->
+  <rect x="870" y="280" width="284" height="30" rx="6" fill="#B2B224"/>
+  <text x="1012" y="298" text-anchor="middle" font-size="10" font-weight="700" fill="#250F04">Caching Layer</text>
+  <text x="1012" y="308" text-anchor="middle" font-size="8" fill="#47470E">SG Optimizer / EverCache / Varnish+Breeze</text>
+
+  <!-- WP Install -->
+  <rect x="870" y="320" width="284" height="26" rx="6" fill="#3B6B82"/>
+  <text x="1012" y="338" text-anchor="middle" font-size="10" font-weight="600" fill="#E3EFF5">WordPress Core Install</text>
+
+  <!-- wp-content -->
+  <rect x="870" y="356" width="284" height="20" rx="4" fill="#4A7D94"/>
+  <text x="1012" y="370" text-anchor="middle" font-size="10" font-weight="600" fill="#E3EFF5">wp-content/</text>
+
+  <!-- Theme (highlighted) -->
+  <rect x="878" y="386" width="268" height="110" rx="8" fill="#B8D6E5" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="1012" y="406" text-anchor="middle" font-size="13" font-weight="700" fill="#250F04">themes/my-theme/</text>
+  <text x="1012" y="421" text-anchor="middle" font-size="9" font-weight="600" fill="#25495C">DEPLOYED FROM GITHUB</text>
+  <g font-size="9.5" fill="#250F04">
+    <text x="896" y="440">Same files as local, plus:</text>
+    <text x="896" y="455"><tspan font-weight="600">vendor/</tspan> — composer install on server</text>
+    <text x="896" y="470"><tspan font-weight="600">assets/css/app.css</tspan> — production CSS</text>
+    <text x="896" y="485">node_modules/ is NOT on server</text>
+  </g>
+
+  <!-- Plugins + Uploads -->
+  <rect x="878" y="506" width="128" height="28" rx="6" fill="#3B6B82"/>
+  <text x="942" y="524" text-anchor="middle" font-size="10" font-weight="600" fill="#E3EFF5">plugins/</text>
+  <rect x="1018" y="506" width="128" height="28" rx="6" fill="#3B6B82"/>
+  <text x="1082" y="524" text-anchor="middle" font-size="10" font-weight="600" fill="#E3EFF5">uploads/</text>
+
+  <!-- Database -->
+  <rect x="870" y="546" width="284" height="42" rx="6" fill="#3B6B82"/>
+  <rect x="882" y="554" width="18" height="18" rx="4" fill="#B8D6E5"/>
+  <text x="891" y="567" text-anchor="middle" font-size="8" font-weight="700" fill="#25495C">DB</text>
+  <text x="910" y="564" font-size="11" font-weight="600" fill="#E3EFF5">Production Database</text>
+  <text x="910" y="580" font-size="9" fill="#B8D6E5">Live content — different URLs than local</text>
+
+  <!-- SSL -->
+  <rect x="870" y="600" width="284" height="30" rx="6" fill="#7090A0"/>
+  <text x="1012" y="618" text-anchor="middle" font-size="10" font-weight="600" fill="#FFFFFF">SSL / Let's Encrypt</text>
+  <text x="1012" y="628" text-anchor="middle" font-size="8" fill="#CDE2ED">HTTPS via host dashboard</text>
+
+  <text x="1012" y="662" text-anchor="middle" font-size="8" fill="#7090A0">Plugins &amp; uploads managed via WP Admin (not Git)</text>
+
+
+  <!-- ====================================================== -->
+  <!-- DATABASE MIGRATION BAND (below the three columns)       -->
+  <!-- ====================================================== -->
+  <rect x="30" y="716" width="1140" height="80" rx="10" fill="#E3EFF5" stroke="#B8D6E5" stroke-width="1.5"/>
+
+  <text x="600" y="738" text-anchor="middle" font-size="12" font-weight="700" fill="#25495C" letter-spacing="0.03em">DATABASE MIGRATION (one-time setup, via WP-CLI)</text>
+
+  <!-- Left DB pill -->
+  <rect x="66" y="750" width="170" height="30" rx="6" fill="#25495C"/>
+  <text x="151" y="769" text-anchor="middle" font-size="10" font-weight="600" fill="#B8D6E5">Local MySQL</text>
+
+  <!-- Right DB pill -->
+  <rect x="964" y="750" width="170" height="30" rx="6" fill="#25495C"/>
+  <text x="1049" y="769" text-anchor="middle" font-size="10" font-weight="600" fill="#B8D6E5">Production MySQL</text>
+
+  <!-- Horizontal arrow between the two DB pills -->
+  <line x1="236" y1="765" x2="964" y2="765" stroke="#25495C" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+
+  <!-- Command sequence label on the arrow -->
+  <rect x="340" y="750" width="520" height="30" rx="6" fill="#FFFFFF" stroke="#B8D6E5" stroke-width="1"/>
+  <text x="600" y="764" text-anchor="middle" font-size="9" font-weight="600" fill="#25495C">wp db export</text>
+  <text x="600" y="776" text-anchor="middle" font-size="9" fill="#25495C">→  wp db import  →  wp search-replace 'local-url' 'live-url'</text>
+
+  <!-- Dashed vertical connectors: DB band ↔ each column's database -->
+  <line x1="151" y1="750" x2="151" y2="594" stroke="#25495C" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="1049" y1="750" x2="1049" y2="588" stroke="#25495C" stroke-width="2" stroke-dasharray="6 4"/>
+
+
+  <!-- ====================================================== -->
+  <!-- LEGEND                                                  -->
+  <!-- ====================================================== -->
+  <rect x="30" y="816" width="1140" height="48" rx="8" fill="#F5F2E3"/>
+
+  <g font-size="10" fill="#735950">
+    <!-- Theme swatch -->
+    <rect x="56" y="833" width="14" height="14" rx="3" fill="#B8D6E5" stroke="#25495C" stroke-width="1.5"/>
+    <text x="78" y="845">Your theme (version-controlled)</text>
+
+    <!-- Code flow swatch -->
+    <line x1="250" y1="840" x2="278" y2="840" stroke="#250F04" stroke-width="3" marker-end="url(#arr-brown)"/>
+    <text x="288" y="845">Code flow (git push)</text>
+
+    <!-- Deploy swatch -->
+    <line x1="432" y1="840" x2="460" y2="840" stroke="#47470E" stroke-width="3" marker-end="url(#arr-olive)"/>
+    <text x="470" y="845">Deploy to host</text>
+
+    <!-- DB swatch -->
+    <line x1="590" y1="840" x2="618" y2="840" stroke="#25495C" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <text x="628" y="845">Database migration (WP-CLI)</text>
+
+    <!-- Per-env swatch -->
+    <rect x="830" y="833" width="14" height="14" rx="3" fill="#EDE8CD"/>
+    <text x="852" y="845">Managed per-environment (not in Git)</text>
+  </g>
+</svg>

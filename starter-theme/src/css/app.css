@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add custom base styles below if needed. */
+/* All component styling should use Tailwind utility classes in your .twig templates. */

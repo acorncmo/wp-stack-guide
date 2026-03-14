@@ -1,0 +1,15 @@
+{# partials/footer.twig -- Site footer #}
+<footer class="bg-brand-dark text-brand-muted py-12 px-6">
+  <div class="container mx-auto text-center">
+    <p class="text-sm">&copy; {{ "now"|date("Y") }} {{ site.name }}. All rights reserved.</p>
+    {% if nav_footer %}
+      <div class="flex justify-center gap-6 mt-4">
+        {% for item in nav_footer.items %}
+          <a href="{{ item.link }}" class="text-sm hover:text-white transition-colors">
+            {{ item.title }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</footer>

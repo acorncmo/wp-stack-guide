@@ -1,0 +1,13 @@
+{# front-page.twig -- Homepage template #}
+{% extends 'base.twig' %}
+
+{% block content %}
+  <section class="bg-brand-dark text-white py-24 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <h1 class="font-display text-5xl mb-6">{{ post.title }}</h1>
+      <div class="text-lg text-brand-light/80">
+        {{ post.content }}
+      </div>
+    </div>
+  </section>
+{% endblock %}
