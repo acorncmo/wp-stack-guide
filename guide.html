@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Modern WordPress Stack — Timber + Twig + Tailwind | acornCMO</title>
+<title>The Modern WordPress Stack for Claude Users | acornCMO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -159,12 +159,13 @@ body {
 
 /* --- SECTIONS --- */
 .section {
-  padding: 4rem 3rem;
-  max-width: 900px;
+  padding: 4rem 6.25rem;
+  max-width: 1100px;
 }
 
-.section-wide {
-  max-width: 100%;
+.section-visual {
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
 .section-blue { background: var(--blue-100); }
@@ -210,20 +211,54 @@ body {
 .section li { margin-bottom: 0.4rem; }
 
 /* --- CODE BLOCKS --- */
-pre[class*="language-"] {
+pre {
+  background: var(--brown-500);
+  color: var(--blue-200);
   border-radius: 8px;
   margin: 1.25rem 0 1.5rem;
+  padding: 1.25rem 1.5rem;
   font-size: 0.82rem;
   line-height: 1.6;
+  overflow-x: auto;
+  max-width: 100%;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 }
 
+pre code {
+  background: none !important;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* Syntax token colors on dark background */
+.token.comment, .token.prolog { color: var(--blue-400) !important; }
+.token.keyword, .token.tag { color: var(--olive-200) !important; }
+.token.string, .token.attr-value { color: var(--gold-300) !important; }
+.token.function { color: var(--blue-300) !important; }
+.token.number, .token.boolean { color: var(--olive-100) !important; }
+.token.operator, .token.punctuation { color: var(--brown-100) !important; }
+.token.variable { color: var(--blue-200) !important; }
+
 code:not([class*="language-"]) {
-  background: var(--gold-100);
+  background: var(--gold-200);
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
   font-size: 0.85em;
-  color: var(--brown-400);
+  color: var(--brown-500);
   font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* Inline code on tinted backgrounds needs contrast */
+.section-gold code:not([class*="language-"]),
+.section-cream code:not([class*="language-"]) {
+  background: var(--gold-300);
+}
+
+#quick-start code:not([class*="language-"]) {
+  background: rgba(255,255,255,0.15);
+  color: var(--blue-200);
 }
 
 /* --- CALLOUT BOXES --- */
@@ -369,7 +404,7 @@ tbody tr:hover { background: var(--gold-100); }
   font-size: 0.8rem;
 }
 
-.step-content { flex: 1; }
+.step-content { flex: 1; min-width: 0; }
 .step-content p { margin-bottom: 0.5rem; }
 
 /* --- SECTION DIVIDER --- */
@@ -398,10 +433,38 @@ tbody tr:hover { background: var(--gold-100); }
   .sidebar { transform: translateX(-100%); }
   .sidebar.open { transform: translateX(0); }
   .mobile-toggle { display: block; }
-  .main-content { margin-left: 0; }
+  .main-content { margin-left: 0; max-width: 100vw; overflow-x: hidden; }
   .hero { padding: 5rem 1.5rem 3rem; }
-  .section { padding: 3rem 1.5rem; }
+  .section { padding: 3rem 1.5rem; max-width: 100vw; box-sizing: border-box; }
+  .section-visual { padding-left: 1rem; padding-right: 1rem; }
   .hero h1 { font-size: 2rem; }
+
+  /* Code blocks: wrap long lines on mobile instead of scrolling */
+  pre {
+    font-size: 0.7rem;
+    line-height: 1.5;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Steps: stack number above content */
+  .step { flex-direction: column; gap: 0.5rem; }
+  .step-content { width: 100%; overflow-wrap: break-word; }
+
+  /* Body text: prevent any overflow */
+  .section p, .section li { overflow-wrap: break-word; }
+
+  /* Tables: horizontal scroll */
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Host cards: stack on mobile */
+  .host-cards { grid-template-columns: 1fr; }
+
+  /* File trees */
+  .file-tree { font-size: 0.7rem; white-space: pre-wrap; word-wrap: break-word; }
 }
 
 /* --- PRINT --- */
@@ -569,6 +632,8 @@ details.collapsible .collapsible-body {
     <a href="#gitignore">The .gitignore File</a>
     <a href="#daily-git">Daily Workflow</a>
 
+    <a href="#starting-fresh" class="nav-section">Starting from Figma</a>
+
     <a href="#theme-foundation" class="nav-section">Theme: Foundation</a>
     <a href="#directory-structure">Directory Structure</a>
     <a href="#install-timber">Installing Timber</a>
@@ -619,8 +684,8 @@ details.collapsible .collapsible-body {
 <!-- HERO -->
 <header class="hero" id="intro">
   <div class="hero-eyebrow">An acornCMO Field Guide</div>
-  <h1>The Modern WordPress Stack for Marketers and Founders</h1>
-  <p>A comprehensive, hands-on guide to building fast, maintainable WordPress sites with Timber, Twig, and Tailwind CSS. No developer required. Built from three real migrations, managed entirely with Claude Code.</p>
+  <h1>The Modern WordPress Stack for Claude Users</h1>
+  <p>A comprehensive, hands-on guide to building fast, maintainable WordPress sites with Timber, Twig, and Tailwind CSS. No developer required. Built from real migrations, managed entirely with Claude Code.</p>
 </header>
 
 <div class="divider"></div>
@@ -636,7 +701,7 @@ details.collapsible .collapsible-body {
 
   <div class="callout callout-tip">
     <div class="callout-title">What you'll need</div>
-    <p>A computer (Mac or Windows), a web browser, a willingness to use the terminal, and a Claude Code subscription. We will walk you through installing everything else.</p>
+    <p>A computer (Mac, Windows, or Linux), a web browser, a willingness to use the terminal, and a Claude Code subscription. We will walk you through installing everything else.</p>
   </div>
 </section>
 
@@ -695,17 +760,13 @@ claude</code></pre>
 <!-- ============================== -->
 <div class="divider"></div>
 
-<section class="section section-wide" id="architecture" style="max-width: 100%;">
-  <div style="max-width: 900px; margin: 0 auto;">
-    <h2 id="architecture-diagram">How It All Fits Together</h2>
-    <p>Before diving into the details, here is the big picture. Three environments, connected by Git and WP-CLI. Your theme is the only thing that flows through version control. The database and media library are managed separately on each environment.</p>
-  </div>
-  <div style="max-width: 1100px; margin: 1.5rem auto 0;">
+<section class="section section-visual" id="architecture">
+  <h2 id="architecture-diagram">How It All Fits Together</h2>
+  <p>Before diving into the details, here is the big picture. Three environments, connected by Git and WP-CLI. Your theme is the only thing that flows through version control. The database and media library are managed separately on each environment.</p>
+  <div style="margin: 1.5rem 0 0; overflow-x: auto;">
     <img src="architecture-diagram.svg" alt="WordPress development architecture diagram showing local environment, GitHub, and production host with arrows indicating deployment flow" style="width: 100%; height: auto;">
   </div>
-  <div style="max-width: 900px; margin: 1.5rem auto 0;">
-    <p>The key insight: <strong>your theme is the only custom code</strong>. WordPress core and plugins are installed and updated through the WordPress admin on each environment independently. The database contains your content and settings, and migrates via WP-CLI export/import with URL search-replace. Your media library (uploads) either migrates via SFTP or is managed directly on the production server. The theme, the thing you build, is a small, version-controlled directory that deploys cleanly to any WordPress host.</p>
-  </div>
+  <p>The key insight: <strong>your theme is the only custom code</strong>. WordPress core and plugins are installed and updated through the WordPress admin on each environment independently. The database contains your content and settings, and migrates via WP-CLI export/import with URL search-replace. Your media library (uploads) either migrates via SFTP or is managed directly on the production server. The theme, the thing you build, is a small, version-controlled directory that deploys cleanly to any WordPress host.</p>
 </section>
 
 <!-- ============================== -->
@@ -797,8 +858,7 @@ claude</code></pre>
   </ul>
 </section>
 
-<section class="section section-wide section-gold" id="host-cards-section">
-  <div style="max-width: 960px; margin: 0 auto;">
+<section class="section section-visual section-gold" id="host-cards-section">
   <div class="host-cards">
     <div class="host-card" id="siteground">
       <h4>SiteGround</h4>
@@ -829,7 +889,6 @@ claude</code></pre>
       <p style="margin-top: 0.75rem; font-size: 0.85rem;"><strong>Best for:</strong> Performance-focused teams, sites with growing traffic, anyone who wants cloud infrastructure without managing it directly. Good middle ground between SiteGround's simplicity and running your own server.</p>
       <p style="font-size: 0.85rem;"><strong>Deploy method:</strong> SFTP, SSH script, or GitHub integration via Cloudways dashboard.</p>
     </div>
-  </div>
   </div>
 </section>
 
@@ -875,7 +934,7 @@ claude</code></pre>
   <div class="step">
     <div class="step-num">1</div>
     <div class="step-content">
-      <p><strong>Download LocalWP</strong> from <a href="https://localwp.com">localwp.com</a>. Choose the Mac or Windows installer. Run it. Accept the defaults during installation.</p>
+      <p><strong>Download LocalWP</strong> from <a href="https://localwp.com">localwp.com</a>. Choose the installer for your OS (Mac, Windows, or Linux). Run it. Accept the defaults during installation.</p>
     </div>
   </div>
   <div class="step">
@@ -895,7 +954,7 @@ claude</code></pre>
     <div class="step-content">
       <p><strong>Know where your files live.</strong> This is important for everything that follows. LocalWP stores sites in a predictable directory:</p>
       <ul>
-        <li><strong>Mac:</strong> <code>~/Local Sites/your-site-name/app/public/</code></li>
+        <li><strong>Mac / Linux:</strong> <code>~/Local Sites/your-site-name/app/public/</code></li>
         <li><strong>Windows:</strong> <code>C:\Users\you\Local Sites\your-site-name\app\public\</code></li>
       </ul>
       <p>Your theme will live at: <code>.../app/public/wp-content/themes/your-theme/</code></p>
@@ -928,7 +987,7 @@ claude</code></pre>
 
   <h3 id="wp-cli">WP-CLI: The WordPress Command Line</h3>
   <p>WP-CLI lets you manage WordPress from the terminal. You will use it for installing plugins, exporting/importing databases, and running search-replace on URLs when migrating between environments.</p>
-  <p><strong>Installing WP-CLI on Mac:</strong></p>
+  <p><strong>Installing WP-CLI on Mac / Linux:</strong></p>
   <pre><code class="language-bash">curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
@@ -982,7 +1041,7 @@ wp media regenerate --yes</code></pre>
   <div class="step">
     <div class="step-num">2</div>
     <div class="step-content">
-      <p><strong>Install Git.</strong> On Mac, open Terminal and type <code>git --version</code>. If Git is not installed, macOS will prompt you to install the Xcode Command Line Tools. On Windows, download Git from <a href="https://git-scm.com">git-scm.com</a>.</p>
+      <p><strong>Install Git.</strong> On Mac, open Terminal and type <code>git --version</code>. If Git is not installed, macOS will prompt you to install the Xcode Command Line Tools. On Linux, use your package manager (e.g., <code>sudo apt install git</code>). On Windows, download Git from <a href="https://git-scm.com">git-scm.com</a>.</p>
     </div>
   </div>
   <div class="step">
@@ -1063,6 +1122,32 @@ git push</code></pre>
 </section>
 
 <!-- ============================== -->
+<!-- STARTING FROM FIGMA            -->
+<!-- ============================== -->
+<div class="divider"></div>
+
+<section class="section section-cream" id="starting-fresh">
+  <h2>Starting from a Figma Design?</h2>
+  <p>Most of this guide assumes you are migrating an existing site. If you are starting fresh from a Figma comp, the same stack applies — you just skip the migration section and go straight from design to theme. Here is the workflow.</p>
+
+  <h3>Prepare your Figma file</h3>
+  <p>Before you open Claude Code, spend 15 minutes organizing your Figma file so it translates cleanly:</p>
+  <p><strong>Name your frames semantically.</strong> "Hero," "Services Grid," "Testimonial Carousel" — not "Frame 47." Claude Code uses these names to structure your Twig templates and CSS classes. Clean naming in Figma means clean code on the other end.</p>
+  <p><strong>Extract your design tokens.</strong> Pull your colors, font families, font sizes, and spacing values into a simple list. You will paste these directly into <code>tailwind.config.js</code> as your brand tokens. If your designer used Figma's local styles or variables, even better — those map one-to-one to Tailwind config values.</p>
+  <p><strong>Export assets.</strong> Save logos, icons, and background images as SVG or optimized PNG. Drop them into <code>starter-theme/assets/img/</code>.</p>
+
+  <h3>The prompt pattern</h3>
+  <p>Once your Figma file is organized, take a screenshot of each major section (hero, nav, content blocks, footer) and start a Claude Code session. The prompt is straightforward:</p>
+  <pre><code class="language-text">Read CLAUDE.md. Here is a screenshot of the homepage hero section from our Figma design.
+Build this as a Twig partial at templates/partials/hero.twig using Tailwind utility classes.
+Match the layout, spacing, and typography as closely as possible using our brand tokens.</code></pre>
+  <p>Work section by section — one partial per Figma frame. Claude Code handles the Figma-to-Tailwind translation well because both systems think in terms of spacing scales, color tokens, and responsive breakpoints. After each partial, preview it in LocalWP, adjust, and move to the next.</p>
+
+  <h3>Where the paths converge</h3>
+  <p>From here, everything else in this guide applies to you: the theme architecture, block patterns, Tailwind configuration, deployment workflows, and Claude Code techniques. Skip ahead to <a href="#theme-foundation">Building Your Theme: The Foundation</a> and keep going.</p>
+</section>
+
+<!-- ============================== -->
 <!-- SECTION 5: THEME FOUNDATION    -->
 <!-- ============================== -->
 <div class="divider"></div>
@@ -1122,7 +1207,7 @@ git push</code></pre>
   <div class="step">
     <div class="step-num">1</div>
     <div class="step-content">
-      <p><strong>Install Composer.</strong> On Mac: <code>brew install composer</code> (if you use Homebrew) or download the installer from <a href="https://getcomposer.org">getcomposer.org</a>. On Windows: download and run the Composer installer from the same site.</p>
+      <p><strong>Install Composer.</strong> On Mac: <code>brew install composer</code> (if you use Homebrew) or download the installer from <a href="https://getcomposer.org">getcomposer.org</a>. On Linux: follow the <a href="https://getcomposer.org/download/">command-line installation</a> or use your package manager. On Windows: download and run the Composer installer from the same site.</p>
     </div>
   </div>
   <div class="step">
