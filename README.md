@@ -68,7 +68,7 @@ End every session by asking Claude Code to update the "Current Status" and "Next
 
 The complete guide covers everything behind this starter kit: why this stack, how it works, three hosting options compared (SiteGround, WP Engine, Cloudways), local development with LocalWP, migration from Elementor or headless CMS, deployment workflows, and working with Claude Code effectively.
 
-Read it at [acorncmo.com/wordpress-guide](https://acorncmo.com/wordpress-guide) or open `guide.html` locally.
+Read it at https://acorncmo.com/guides/wp-claude-stack/guide.html or open `guide.html` locally.
 
 ## What this stack gives you
 
